@@ -1,5 +1,4 @@
 %April 23
-%Save figure as a video to use it later without hooking up to a camera
 %Added pushbutton while loop 
 
 close all;
