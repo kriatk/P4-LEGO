@@ -26,29 +26,39 @@ while (ishandle(H))
      
      B=rgb2hsv(cam_image);
      
+     gray=rgb2gray(cam_image);
+     
      C=B(:,:,1);
      D=B(:,:,2);
      
-     %C=im2bw(C,graythresh(C));
+    
      regions_sat=detectMSERFeatures(D);
      regions_hue=detectMSERFeatures(C);
- %corners=detectSURFFeatures(B);
- %strongest=selectStrongest(corners,100);
- %[vector, vis]=extractFeatures(B,strongest,'Method','SURF');
+     regions_gray=detectMSERFeatures(gray)
+     %corners=detectSURFFeatures(B);
+     %strongest=selectStrongest(corners,100);
+     %[vector, vis]=extractFeatures(B,strongest,'Method','SURF');
  
 
  
- subplot(1,2,1), h1=imshow(C);title('MSER feature detection on Hue');
+ subplot(2,2,1), h1=imshow(C);title('MSER feature detection on Hue');
  hold on;
  plot(regions_hue,'showPixelList',true,'showEllipses',false);
  hold off;
- subplot(1,2,2), h2=imshow(D);title('on Saturation');
+ 
+ subplot(2,2,2), h2=imshow(D);title('on Saturation');
  hold on;
  plot(regions_sat,'showPixelList',true,'showEllipses',false);
- 
  hold off;
+ 
+ subplot(2,2,3), h3=imshow(gray);title('on gray image');
+ hold on;
+ plot(regions_gray,'showPixelList',true,'showEllipses',false);
+ hold off;
+ 
+ subplot(2,2,4),h4=imshow(cam_image);title('cam image');
     
-    %set(h1,'CDATA',cam_image);
+    %set(h4,'CDATA',cam_image);
     
     drawnow; 
 end
