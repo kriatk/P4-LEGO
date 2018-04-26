@@ -26,15 +26,33 @@ clear all;
 
 
 %% Import
-cam_image =im2double(imread('lego_own.jpg'));
-%cam_image =imread('black_separated_light.png');
+%cam_image =im2double(imread('lego_own.jpg'));
+cam_image =imread('black_separated_light.png');
 size(cam_image)
 figure; imshow(cam_image);
-cam_image=imresize(cam_image,0.2);
+%cam_image=imresize(cam_image,0.2);
 size(cam_image)
 figure; imshow(cam_image);
 
-
+%% eliminate background
+% I=rgb2gray(cam_image);
+% background = imopen(I,strel('disk',45));
+% 
+% figure
+% surf(double(background(1:8:end,1:8:end))),zlim([-1 1]);
+% ax = gca;
+% ax.YDir = 'reverse';
+% 
+% figure;
+% I2 = I - background;
+% imshow(I2)
+% 
+% I3 = imadjust(I2);
+% imshow(I3);
+% 
+% bw = imbinarize(I3);
+% bw = bwareaopen(bw, 50);
+% imshow(bw)
 %% RGB
 
 rmat=cam_image(:,:,1);
@@ -85,6 +103,43 @@ title('S Plane');
 subplot(2,2,3), imshow(V);
 title('V Plane');
 subplot(2,2,4), imshow(cam_image_hsv);
+title('Original HSV Image');
+
+levelh = 0.5; %higher more black
+levelh2 =0.7;
+levels = 0.7; %higher more withe
+levelv = 0.6; %higher more black, lower less black
+hi1=imbinarize(H,levelh) ;%& not(imbinarize(H,levelh2));
+si2=imbinarize(S,levels);
+vi3=imbinarize(V,levelv);
+HSVsum = (hi1 | si2 );%| not(bi3));
+
+figure;
+% Plot the data
+subplot(2,2,1), imshow(hi1);
+title('H Plane');
+subplot(2,2,2), imshow(si2);
+title('S Plane');
+subplot(2,2,3), imshow(vi3);
+title('V Plane');
+subplot(2,2,4), imshow(HSVsum);
+title('Sum of all the planes');
+
+%% NTSC
+cam_image_ntsc=rgb2ntsc(cam_image);
+     
+     NT=cam_image_ntsc(:,:,1);
+     S=cam_image_ntsc(:,:,2);
+     C=cam_image_ntsc(:,:,3);
+     
+figure;
+subplot(2,2,1), imshow(H);
+title('H Plane');
+subplot(2,2,2), imshow(S);
+title('S Plane');
+subplot(2,2,3), imshow(V);
+title('V Plane');
+subplot(2,2,4), imshow(cam_image_ntsc);
 title('Original HSV Image');
 
 levelh = 0.5; %higher more black
