@@ -132,34 +132,33 @@ cam_image_ntsc=rgb2ntsc(cam_image);
      S=cam_image_ntsc(:,:,2);
      C=cam_image_ntsc(:,:,3);
      
-figure;
-subplot(2,2,1), imshow(H);
-title('H Plane');
+figure(1);
+subplot(2,2,1), imshow(NT);
+title('NT Plane');
 subplot(2,2,2), imshow(S);
 title('S Plane');
-subplot(2,2,3), imshow(V);
-title('V Plane');
+subplot(2,2,3), imshow(C);
+title('C Plane');
 subplot(2,2,4), imshow(cam_image_ntsc);
-title('Original HSV Image');
+title('Original NTSC Image');
 
-levelh = 0.5; %higher more black
-levelh2 =0.7;
-levels = 0.7; %higher more withe
-levelv = 0.6; %higher more black, lower less black
-hi1=imbinarize(H,levelh) ;%& not(imbinarize(H,levelh2));
-si2=imbinarize(S,levels);
-vi3=imbinarize(V,levelv);
-HSVsum = (hi1 | si2 );%| not(bi3));
+levelh = 0.5%0.26; %higher more black
+levels = %0.1; %higher more withe
+levelv = %0.10; %higher more black, lower less black
+nti=imbinarize(NT,levelh) ;%& not(imbinarize(H,levelh2));
+si=imbinarize(S,levels);
+ci=imbinarize(C,levelv);
+NTSCsum = (nti | si | ci );
 
-figure;
+figure(2);
 % Plot the data
-subplot(2,2,1), imshow(hi1);
-title('H Plane');
-subplot(2,2,2), imshow(si2);
-title('S Plane');
-subplot(2,2,3), imshow(vi3);
-title('V Plane');
-subplot(2,2,4), imshow(HSVsum);
+subplot(2,2,1), imshow(nti);
+title('N Plane');
+subplot(2,2,2), imshow(si);
+title('T Plane');
+subplot(2,2,3), imshow(ci);
+title('SC Plane');
+subplot(2,2,4), imshow(NTSCsum);
 title('Sum of all the planes');
 
 %% Complement Image and Fill in holes
