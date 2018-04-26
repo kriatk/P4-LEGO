@@ -25,8 +25,21 @@ clear all;
 %      cam_image=imadjust(cam_image,stretchlim(cam_image));
 
 
-%% Import and RGB
-cam_image =imread('lego_own.jpg');
+%% Import
+cam_image =im2double(imread('lego_own.jpg'));
+%cam_image =imread('black_separated_light.png');
+size(cam_image)
+figure; imshow(cam_image);
+cam_image=imresize(cam_image,0.2);
+size(cam_image)
+figure; imshow(cam_image);
+
+%% eliminate background
+
+
+
+%% RGB
+
 rmat=cam_image(:,:,1);
 gmat=cam_image(:,:,2);
 bmat=cam_image(:,:,3);

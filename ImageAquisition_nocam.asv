@@ -25,8 +25,18 @@ clear all;
 %      cam_image=imadjust(cam_image,stretchlim(cam_image));
 
 
-%% Import and RGB
-cam_image =imread('lego_own.jpg');
+%% Import
+cam_image =im2double(imread('lego_own.jpg'));
+%cam_image =imread('black_separated_light.png');
+size(cam_image)
+figure; imshow(cam_image);
+cam_image=imresize(cam_image,0.2);
+size(cam_image)
+figure; imshow(cam_image);
+
+
+%% RGB
+
 rmat=cam_image(:,:,1);
 gmat=cam_image(:,:,2);
 bmat=cam_image(:,:,3);
@@ -39,7 +49,7 @@ title('Green Plane');
 subplot(2,2,3), imshow(bmat);
 title('Blue Plane');
 subplot(2,2,4), imshow(cam_image);
-title('Original Image');
+title('Original RGB Image');
 
 levelr = 0.59;
 levelg = 0.48;
@@ -75,16 +85,16 @@ title('S Plane');
 subplot(2,2,3), imshow(V);
 title('V Plane');
 subplot(2,2,4), imshow(cam_image_hsv);
-title('Original Image');
+title('Original HSV Image');
 
 levelh = 0.5; %higher more black
-level
+levelh2 =0.7;
 levels = 0.7; %higher more withe
 levelv = 0.6; %higher more black, lower less black
-hi1=imbinarize(H,levelh) & not(imbinarize(H,levelh));
+hi1=imbinarize(H,levelh) ;%& not(imbinarize(H,levelh2));
 si2=imbinarize(S,levels);
 vi3=imbinarize(V,levelv);
-HSVsum = (hi1&si2&vi3);
+HSVsum = (hi1 | si2 );%| not(bi3));
 
 figure;
 % Plot the data
@@ -97,15 +107,17 @@ title('V Plane');
 subplot(2,2,4), imshow(HSVsum);
 title('Sum of all the planes');
 
-%% combined
-
+%% Complement Image and Fill in holes
+Icomp = imcomplement(HSVsum);
+Ifilled = imfill(HSVsum,'holes');
+figure, imshow(Ifilled);
 
 
 %% Gray
      gray=rgb2gray(cam_image);
      
-     C=B(:,:,1);
-     D=B(:,:,2);
+     C=cam_image_hsv(:,:,1);
+     D=cam_image_hsv(:,:,2);
      
     
      regions_sat=detectMSERFeatures(D);
@@ -116,7 +128,7 @@ title('Sum of all the planes');
      %[vector, vis]=extractFeatures(B,strongest,'Method','SURF');
  
 
- 
+ figure;
  subplot(2,2,1), h1=imshow(C);title('MSER feature detection on Hue');
  hold on;
  plot(regions_hue,'showPixelList',true,'showEllipses',false);
