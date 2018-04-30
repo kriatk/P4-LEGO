@@ -43,12 +43,12 @@ while (ishandle(H))
  
  subplot(2,2,1), h1=imshow(C);title('MSER feature detection on Hue');
  hold on;
- %plot(regions_hue,'showPixelList',true,'showEllipses',false);
+ plot(regions_hue,'showPixelList',true,'showEllipses',false);
  hold off;
  
  subplot(2,2,2), h2=imshow(D);title('on Saturation');
  hold on;
- %plot(regions_sat,'showPixelList',true,'showEllipses',false);
+ plot(regions_sat,'showPixelList',true,'showEllipses',false);
  hold off;
  
  subplot(2,2,3), h3=imshow(gray);title('on gray image');
