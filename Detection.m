@@ -6,15 +6,16 @@
 
 
 %% Read in image
-%I = imread('image.jpg');
+%I = imread('lego_own.jpg');
 I = imread('black_separated_light.png');
-I=imresize(I,4);
+I=imresize(I,0.2);
 imshow(I);
 
 %% Solution:  Thresholding the image on each color pane
 %Im=double(img)/255;
 Im=I;
-
+%h= fspecial('gaussian',[5,5] , 2);
+%I= imfilter(I,h);
 rmat=Im(:,:,1);
 gmat=Im(:,:,2);
 bmat=Im(:,:,3);
