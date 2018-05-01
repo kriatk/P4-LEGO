@@ -33,13 +33,10 @@ for i=1:2000
     drawnow;
     if mod(i,100)==0
         
-        export_fig(gcf,fullfile('C:\Users\rober\Documents\4th Semester\P4\Training photos\',sprintf('Black_#%d',counter)));
+        export_fig(gcf,('C:\Users\rober\Documents\4th Semester\P4\Training photos\Test'),(sprintf('white_%d',counter)),'-native')
 counter=counter+1;
     end 
 end
-%set(gca,'position',[0 0 1 1],'units','normalized')
-%saveas(gcf,fullfile('C:\Users\rober\Documents\4th Semester\P4\Training photos\','Pink1''.png'));
-     
-    
+
     
 mxNiDeleteContext(KinectHandles);
