@@ -6,15 +6,18 @@
 
 
 %% Read in image
-%I = imread('image.jpg');
-I = imread('black_separated_light.png');
-I=imresize(I,4);
+load('Lots_ofBlocks.mat','cam_image_cropped');
+I=cam_image_cropped;
+% I = imread('black_separated_light.png');
+% I = imread('lego_own.jpg'); 
+ I=imresize(I,3);
 imshow(I);
 
 %% Solution:  Thresholding the image on each color pane
 %Im=double(img)/255;
 Im=I;
-
+%h= fspecial('gaussian',[5,5] , 2);
+%I= imfilter(I,h);
 rmat=Im(:,:,1);
 gmat=Im(:,:,2);
 bmat=Im(:,:,3);
@@ -65,12 +68,12 @@ title('C Plane');
 subplot(2,2,4), imshow(cam_image_ntsc);
 title('Original NTSC Image');
 
-levelh = 0.26; %higher more black
-levels = 0.1; %higher more withe
-levelv = 0.10; %higher more black, lower less black
-i1=imbinarize(NT,levelh) ;%& not(imbinarize(H,levelh2));
+levelnt = 0.28; %higher more black
+levels = 0.60; %lower more withe
+levelc = 0.15; %higher more black, lower less black
+i1=imbinarize(NT,levelnt) ;%& not(imbinarize(H,levelh2));
 i2=imbinarize(S,levels);
-i3=imbinarize(C,levelv);
+i3=imbinarize(C,levelc);
 Isum = (i1 | i2 | i3 );
 
 figure(2);
@@ -84,10 +87,41 @@ title('SC Plane');
 subplot(2,2,4), imshow(Isum);
 title('Sum of all the planes');
 
+%% EDGE detection
+% I=cam_image_cropped;
+% I=imresize(I,3);
+% I_ycbcr= rgb2ycbcr(I);
+% I_edge=edge(rgb2gray(I_ycbcr),'canny',0.24);
+% figure;
+% imshow(I_edge);
+% size_binary=size(I_edge)
+% edge_corr= zeros(size_binary);
+% for row=1:size_binary(1);
+%    for col=1:size_binary(2);
+%        if I_edge(row,col)==1;
+%           edge_corr(row-1:row+1,col-1:col+1)=1;
+%        end
+%    end
+% end
+% 
+% figure;
+% imshow(edge_corr);   
+% 
+% figure;
+% imshow(not(edge_corr) & Isum);
+% Isum=not(edge_corr) & Isum;
+
+%% edgefiltering
+% I_range=rangefilt(I);
+% I_range_ntsc=rgb2ntsc(I_range);
+% I_range_ntsc_gray=rgb2gray(I_range_ntsc);
+% I_range_bin=imbinarize(I_range_ntsc_gray,0.02);
+% figure;imshow(I_range_bin);
+
 %% Complement Image and Fill in holes
 Icomp = imcomplement(not(Isum));
 Ifilled = imfill(Icomp,'holes');
-figure, imshow(Ifilled);
+figure; imshow(Ifilled);
 
 %%
 se = strel('disk', 1);
