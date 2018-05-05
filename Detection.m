@@ -1,8 +1,14 @@
-%% Color Based Segmentation
-% This example preprocesses and image with color based segmentation in the RGB color space.  
-% After segmenting the image, region properties are extracted to count and label the objects. 
+%% Detection of Blocks with Blob detection
+tic; % Start timer.
+clc; % Clear command window.
+clearvars; % Get rid of variables from prior run of this m-file.
+fprintf('Running Detection.m...\n'); % Message sent to command window.
+workspace; % Make sure the workspace panel with all the variables is showing.
+imtool close all;  % Close all imtool figures.
+format long g;
+format compact;
+captionFontSize = 14;
 
-% Copyright 2014 The MathWorks, Inc.
 
 
 %% Read in image
@@ -10,8 +16,67 @@ load('Lots_ofBlocks.mat','cam_image_cropped');
 I=cam_image_cropped;
 % I = imread('black_separated_light.png');
 % I = imread('lego_own.jpg'); 
- I=imresize(I,3);
+I=imresize(I,3);
+[rows, columns, numberOfColorChannels] = size(I); 
 imshow(I);
+
+%% Histogram
+Igray=rgb2gray(I);
+Intsc=rgb2ntsc(I);
+[pixelCount, grayLevels] = imhist(Igray(:,:,1));
+figure;
+subplot(2, 1, 1);
+bar(pixelCount);
+title('Histogram of original image', 'FontSize', captionFontSize);
+xlim([0 grayLevels(end)]); % Scale x axis manually.
+grid on;
+
+hold on;
+maxYValue = ylim;
+line([thresholdValue, thresholdValue], maxYValue, 'Color', 'r');
+% Place a text label on the bar chart showing the threshold.
+annotationText = sprintf('Thresholded at %d gray levels', thresholdValue);
+% For text(), the x and y need to be of the data class "double" so let's cast both to double.
+text(double(thresholdValue + 5), double(0.5 * maxYValue(2)), annotationText, 'FontSize', 10, 'Color', [0 .5 0]);
+text(double(thresholdValue - 70), double(0.94 * maxYValue(2)), 'Background', 'FontSize', 10, 'Color', [0 0 .5]);
+text(double(thresholdValue + 50), double(0.94 * maxYValue(2)), 'Foreground', 'FontSize', 10, 'Color', [0 0 .5]);
+
+
+thresholdValue = 62.5;
+binaryImage = Igray > thresholdValue; % Bright objects will be chosen if you use >.
+% ========== IMPORTANT OPTION ============================================================
+% Use < if you want to find dark objects instead of bright objects.
+%   binaryImage = originalImage < thresholdValue; % Dark objects will be chosen if you use <.
+
+% Do a "hole fill" to get rid of any background pixels or "holes" inside the blobs.
+binaryImage = imfill(binaryImage, 'holes');
+
+edge_corr= zeros(size(binaryImage));
+for row=2:1:size(binaryImage,1)-1
+    for col=2:1:size(binaryImage,2)-1
+        if sum(sum(binaryImage(row-1:row+1,col-1:col+1))) ~=9 && binaryImage(row,col) == 1
+            edge_corr(row,col)=1;
+%             binaryImage(row,col)=0;
+               
+        end
+        
+    end
+end
+
+% for row=1:1:size(edge_corr,1)
+%     for col=1:1:size(edge_corr,2)
+%         if edge_corr(row,col)== 1
+%             binaryImage(row,col)=0;
+%         end
+%     end
+% end
+
+binaryImage=not(edge_corr) & binaryImage;
+
+subplot(2, 1, 2);
+imshow(binaryImage)
+
+
 
 %% Solution:  Thresholding the image on each color pane
 %Im=double(img)/255;
