@@ -1,16 +1,17 @@
-function binarymap = histogram_binarymap(I, thresholdValue)
+function binarymap = histogram_binarymap(I, thresholdValue,print)
 
 Igray=rgb2gray(I);
 captionFontSize = 14;
 % Igray=rgb2gray(rgb2ycbcr(I));
 [pixelCount, grayLevels] = imhist(Igray);
 
+if print ~= 0
 subplot(2, 1, 1);
 bar(pixelCount);
 title('Histogram of original image', 'FontSize', captionFontSize);
 xlim([0 grayLevels(end)]); % Scale x axis manually.
 grid on;
-
+end 
 % thresholdValue = 73;
 % thresholdValue = 62.5;
 
@@ -19,20 +20,7 @@ binaryHist = Igray > thresholdValue; % Bright objects will be chosen if you use 
 % Do a "hole fill" to get rid of any background pixels or "holes" inside the blobs.
 binarymap = imfill(binaryHist, 'holes');
 
-% edge_corr= zeros(size(binaryHist));
-% for row=2:1:size(binaryHist,1)-1
-%     for col=2:1:size(binaryHist,2)-1
-%         if sum(sum(binaryHist(row-1:row+1,col-1:col+1))) ~=9 && binaryHist(row,col) == 1
-%             edge_corr(row,col)=1;
-% %             binaryHist(row,col)=0;
-%                
-%         end
-%         
-%     end
-% end
-% 
-% binaryHist=not(edge_corr) & binaryHist;
-
+if print ~= 0
 hold on;
 maxYValue = ylim;
 line([thresholdValue, thresholdValue], maxYValue, 'Color', 'r');
@@ -48,6 +36,8 @@ hold off;
 
 subplot(2, 1, 2);
 imshow(binaryHist)
+drawnow;
 
+end
 
 end
