@@ -1,8 +1,20 @@
 %% This is a script to detect one blob on a black surface
 
-myFolder = 'C:\Users\Stefan_Na\OneDrive\MOE\P4\Pictures\Black'; % Define your working folder
+myFolder = 'C:\Users\Stefan_Na\OneDrive\MOE\P4\Pictures\BlueCar'; % Define your working folder
+% maximumSize= 11000; % for Red
+% minimumSize= 8000; % for Red
+% maximumSize= 11000; % for Gray
+% minimumSize= 9000; % for Gray
 
-filePattern = fullfile(myFolder, '*.png');
+maximumSize= 11000; % for BlueCar
+minimumSize= 9500; % for BlueCar
+
+% thresholdHist = 45; %for Red
+% thresholdHist = 52; %for Gray
+thresholdHist = 41; %for BlueCar
+
+
+filePattern = fullfile(myFolder, '*.jpg');
 pictures = dir(filePattern);
 picturesfull= {};
 
@@ -18,10 +30,7 @@ for k = 1:length(pictures)
   I= imread(char(fullFileName));
   Igray=rgb2gray(I);
 
-  thresholdValue = 100.5;
-  
-  
-  binaryImage=histogram_binarymap(I, thresholdValue,1);
+  binaryImage=histogram_binarymap(I, thresholdHist,1);
 %   drawnow;
   
   %% get Blob measurements
@@ -30,20 +39,24 @@ labeledImage = bwlabel(binaryImage, 8);
 % quickfix but removal of small blocs does not work
 blobMeasurements= struct([blobMeasurements;regionprops(binaryImage, Igray, 'all')]);
 numberOfBlobs = size(blobMeasurements, 1);
-  
+  %% get color
+%   Pixelcolors = find(binaryImage);
+%   for 
 end
 
 %% drop too samll blobs and adjust binary
 
-allBlobAreas = [blobMeasurements.Area];
-allowableBlobs = allBlobAreas > 300; % Take the big objects.
-keeperIndexes = find(allowableBlobs);
-keeperBlobsImage = ismember(labeledImage, keeperIndexes);
-% figure; imshow(keeperBlobsImage)
-binaryImage=keeperBlobsImage;
+% allBlobAreas = [blobMeasurements.Area];
+% allowableBlobs = allBlobAreas > 300; % Take the big objects.
+% keeperIndexes = find(allowableBlobs);
+% keeperBlobsImage = ismember(labeledImage, keeperIndexes);
+% % figure; imshow(keeperBlobsImage)
+% binaryImage=keeperBlobsImage;
 %% remove the small blobs from blobmeasurements
 allBlobAreas = [blobMeasurements.Area];
-notallowableBlobs = allBlobAreas < 300; % Take the small objects.
+notallowableBlobs = allBlobAreas < minimumSize; % Take the small objects.
+notallowableBlobs1 = allBlobAreas > maximumSize;
+notallowableBlobs=notallowableBlobs | notallowableBlobs1;
 dropBlobs = find(notallowableBlobs);
 
 for i=length(dropBlobs):-1:1

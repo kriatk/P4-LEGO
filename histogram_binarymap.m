@@ -35,7 +35,7 @@ hold off;
 
 
 subplot(2, 1, 2);
-imshow(binaryHist)
+imshow(binarymap)
 drawnow;
 
 end
