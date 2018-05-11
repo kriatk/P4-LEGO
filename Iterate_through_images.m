@@ -1,8 +1,8 @@
 %% This is a script to detect one blob on a black surface
 clear all; close all; clc;
 
-myFolder = 'D:\Google Drev\AAU\4 semester\P4\Training pictures\09-05-18\09-05-18\Red'; % Define your working folder
-maximumSize= 11000; % for Red
+myFolder = 'C:\Users\Stefan_Na\OneDrive\MOE\P4\P4-LEGO\Photo taker for training\Blue_small'; % Define your working folder
+maximumSize= 110000; % for Red
 minimumSize= 8000; % for Red
 % maximumSize= 11000; % for Gray
 % minimumSize= 9000; % for Gray
@@ -10,7 +10,7 @@ minimumSize= 8000; % for Red
 % maximumSize= 11000; % for BlueCar
 % minimumSize= 9500; % for BlueCar
 
-thresholdHist = 45; %for Red
+thresholdHist = 47; %for Red
 % thresholdHist = 52; %for Gray
 % thresholdHist = 41; %for BlueCar
 
@@ -38,8 +38,9 @@ for k = 1:length(pictures)
 
 labeledImage = bwlabel(binaryImage, 8);
 % quickfix but removal of small blocs does not work
-% blobMeasurements= struct([blobMeasurements;regionprops(binaryImage, Igray, 'all')]);
-blobMeasurements= struct([blobMeasurements;regionprops(binaryImage, Igray, 'Area', 'MajorAxisLength', 'MinorAxisLength', 'ConvexArea', 'Eccentricity', 'EquivDiameter', 'Perimeter', 'Solidity', 'MeanIntensity')]); %for specific measurments
+blobMeasurements= struct([blobMeasurements;regionprops(binaryImage, Igray, 'all')]);
+% blobMeasurements= struct([blobMeasurements;regionprops(binaryImage, Igray, 'Area', 'MajorAxisLength', 'MinorAxisLength', 'ConvexArea', 'Eccentricity', 'EquivDiameter', 'Perimeter', 'Solidity', 'MeanIntensity')]); %for specific measurments
+
 numberOfBlobs = size(blobMeasurements, 1);
   %% get color
 %   Pixelcolors = find(binaryImage);
