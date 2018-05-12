@@ -4,7 +4,7 @@ clear all; close all; clc;
 myFolder = 'C:\Users\Stefan_Na\OneDrive\MOE\P4\Pictures\Set_10_bricks'; % Define your working folder
 
 maximumSize= 15000; % 
-minimumSize= 500; % 
+minimumSize= 2000; % 
 
 % maximumSize= 5000; % for Red
 % minimumSize= 1000; % for Red
@@ -33,7 +33,8 @@ for k = 1:length(pictures)
   FileNames=[FileNames;fullfile(myFolder, baseFileName)];
   picturesfull = [picturesfull;fullfile(myFolder, baseFileName)];
 
-  I= imread(char(fullFileName));
+%   I= imread(char(fullFileName));
+  I=imread();
   Igray=rgb2gray(I);
 
   binaryImage=histogram_binarymap(I, thresholdHist,minimumSize,maximumSize,1);
