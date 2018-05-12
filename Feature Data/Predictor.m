@@ -30,6 +30,17 @@ end
 
 blobs = struct2table(stats);
 
-% train the classifier and make predcitions 
-[trainedClassifier, validationAccuracy] = trainClassifier(feature_space) %Quadratic SVM classifier function
-yfit = trainedClassifier.predictFcn(blobs) % 1 Red; 2 Gray; 3 Car;
+%Train the classifier and make predcitions. %Quadratic SVM classifier function
+% 1-blue_med;
+% 2-blue_small;
+% 3-car;
+% 4-gray;
+% 5-green_plate; 
+% 6-red;
+% 7-red_long;
+% 8-white;
+% 9-yellow_long;
+% 10-yellow_round;
+
+[trainedClassifier, validationAccuracy] = trainClassifier(feature_space) 
+yfit = trainedClassifier.predictFcn(blobs) 

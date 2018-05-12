@@ -1,16 +1,16 @@
 %% This is a script to detect one blob on a black surface
 clear all; close all; clc;
 
-myFolder = 'D:\Google Drev\AAU\4 semester\P4\Training pictures\09-05-18\09-05-18\Red'; % Define your working folder
-maximumSize= 11000; % for Red
-minimumSize= 8000; % for Red
+myFolder = 'D:\Google Drev\AAU\4 semester\P4\Training pictures\Single Bricks\Topside\Yellow_long'; % Define your working folder
+maximumSize= 5000; % for Red
+minimumSize= 1000; % for Red
 % maximumSize= 11000; % for Gray
 % minimumSize= 9000; % for Gray
 
 % maximumSize= 11000; % for BlueCar
 % minimumSize= 9500; % for BlueCar
 
-thresholdHist = 45; %for Red
+thresholdHist = 100; %for Red
 % thresholdHist = 52; %for Gray
 % thresholdHist = 41; %for BlueCar
 
