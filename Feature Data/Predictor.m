@@ -7,13 +7,17 @@ img = imread('testImage.jpg');
 % This image filetring is bad, but can be exchanged with some Stefan code
 % or cascade classifier.
 img_gray = rgb2gray(img);
-level = graythresh(img_gray);
+% level = graythresh(img_gray);
 img_bw = imbinarize(img_gray,'global');
+% img_bw= img_gray
 img_bw = imfill(img_bw, 'holes');
+labeledImage = bwlabel(img_bw, 8);
+imshow(labeledImage);
 imshow(img_bw);
 
 %Extract some info about the blobs & remove not allowable blobs
 stats = regionprops(img_bw, img_gray, 'Area', 'MajorAxisLength', 'MinorAxisLength', 'ConvexArea', 'Eccentricity', 'EquivDiameter', 'Perimeter', 'Solidity', 'MeanIntensity');
+blobMeasurements= regionprops(img_bw, img_gray, 'all');
 
 minimumSize = 8000;
 maximumSize = 11000;
