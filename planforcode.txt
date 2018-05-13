@@ -1,0 +1,28 @@
+PLAN FOR CODE
+
+MAIN CODE:
+%% scan tag of box
+
+%% get present set from ID
+
+%% move tray using UR5
+%          bricks are placed on tray and spread by hand
+ 
+%% Take picture
+
+%% identify Blobs
+
+%% identify color
+
+%% run classifier over blobs and identify present blobs
+%           also identify blobs that should not be there
+
+%% compare present bricks from the picture to set list
+%           output status of the set
+
+% save box status with Scancode in Database
+
+%% UR5 move tray away
+
+
+

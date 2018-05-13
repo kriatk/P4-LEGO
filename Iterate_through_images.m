@@ -5,6 +5,7 @@ myFolder = 'C:\Users\Stefan_Na\OneDrive\MOE\P4\Pictures\Set_10_bricks'; % Define
 
 maximumSize= 15000; % 
 minimumSize= 500; % 
+thresholdHist = 50; %for Red
 
 % maximumSize= 5000; % for Red
 % minimumSize= 1000; % for Red
@@ -38,13 +39,13 @@ for k = 1:length(pictures)
 
   binaryImage=histogram_binarymap(I, thresholdHist,minimumSize,maximumSize,1);
 %   drawnow;
-  
+%   pause(2);
   %% get Blob measurements
 
 labeledImage = bwlabel(binaryImage, 8);
 % quickfix but removal of small blocs does not work
-% blobMeasurements= struct([blobMeasurements;regionprops(binaryImage, Igray, 'all')]);
-blobMeasurements= struct([blobMeasurements;regionprops(binaryImage, Igray, 'Area', 'MajorAxisLength', 'MinorAxisLength', 'ConvexArea', 'Eccentricity', 'EquivDiameter', 'Perimeter', 'Solidity', 'MeanIntensity')]); %for specific measurments
+blobMeasurements= struct([blobMeasurements;regionprops(binaryImage, Igray, 'all')]);
+% blobMeasurements= struct([blobMeasurements;regionprops(binaryImage, Igray, 'Area', 'MajorAxisLength', 'MinorAxisLength', 'ConvexArea', 'Eccentricity', 'EquivDiameter', 'Perimeter', 'Solidity', 'MeanIntensity')]); %for specific measurments
 numberOfBlobs = size(blobMeasurements, 1);
   %% get color
 %   Pixelcolors = find(binaryImage);

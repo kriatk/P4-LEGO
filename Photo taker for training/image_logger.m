@@ -1,4 +1,4 @@
-obj = videoinput('winvideo', 2, 'MJPG_640x480'); 
+obj = videoinput('winvideo', 1, 'MJPG_640x480'); 
 set(obj,'ReturnedColorSpace','rgb');
 
 src_obj = getselectedsource(obj); 
@@ -10,11 +10,11 @@ src_obj.BacklightCompensation = 'off';
 src_obj.Sharpness = 100;
 src_obj.Saturation = 50;
 %%
-for i=140:150
+for i=1:1
     img = getsnapshot(obj);sound(100);
-    imagesc(img);
+%     imagesc(img);
     i = i+1;
-    imwrite(img,sprintf('%d.jpg',i))
+%     imwrite(img,sprintf('%d.jpg',i))
     
     pause(0.8);
     

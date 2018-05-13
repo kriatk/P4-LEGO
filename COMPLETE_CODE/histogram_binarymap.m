@@ -1,4 +1,4 @@
-function [binarymap,[] = histogram_binarymap(I, thresholdValue,print)
+function binarymap = histogram_binarymap(I, thresholdValue,minimumSize,maximumSize,print)
 
 Igray=rgb2gray(I);
 % Igray=rgb2gray(rgb2ycbcr(I));
@@ -11,8 +11,6 @@ title('Histogram of original image', 'FontSize', 14);
 xlim([0 grayLevels(end)]); % Scale x axis manually.
 grid on;
 end 
-% thresholdValue = 73;
-% thresholdValue = 62.5;
 
 binaryHist = Igray > thresholdValue; % Bright objects will be chosen if you use >.
 
@@ -21,16 +19,17 @@ binarymap = imfill(binaryHist, 'holes');
 
 %% get Blob measurements
 labeledImage = bwlabel(binarymap, 8);
-blobMeasurements = regionprops(binarymap, Igray, 'all');
+blobMeasurements = regionprops(binarymap, Igray, 'Area');
 %% remove noise
 
 allBlobAreas = [blobMeasurements.Area];
-allowableBlobs = allBlobAreas > 300; % Take the small objects.
+allowableBlobs = allBlobAreas > minimumSize; % Take the small objects.
+allowableBlobs1 = allBlobAreas < maximumSize;
+allowableBlobs = allowableBlobs & allowableBlobs1;
+sum(allowableBlobs)
 keeperIndexes = find(allowableBlobs);
 keeperBlobsImage = ismember(labeledImage, keeperIndexes);
-figure; imshow(keeperBlobsImage)
-binaryImage=keeperBlobsImage;
-
+binarymap=keeperBlobsImage;
 
 if print ~= 0
 hold on;
@@ -49,7 +48,7 @@ hold off;
 subplot(2, 1, 2);
 imshow(binarymap)
 drawnow;
-
+ 
 end
 
 end
