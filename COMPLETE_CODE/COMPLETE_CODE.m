@@ -1,7 +1,7 @@
 clc;
 clear all;
 close all;
-
+addpath('./functions/');
 %% Settings
 tic;
 %camerasettings
@@ -89,7 +89,13 @@ numberOfBlobs = size(blobMeasurements, 1);
 % numberOfBlobs = size(blobMeasurements, 1);
 toc
 %% identify color
+color.r=struct2cell(regionprops(labeledImage, I(:,:,1), 'PixelValues'))';
+color.g=struct2cell(regionprops(labeledImage, I(:,:,2), 'PixelValues'))';
+color.b=struct2cell(regionprops(labeledImage, I(:,:,3), 'PixelValues'))';
 
+for i=1:length(color.r)
+    blobMeasurements(i).color=[mean(color.r{i}),mean(color.g{i}),mean(color.b{i})];    
+end
 %% run classifier over blobs and identify present blobs
 tic
 %           also identify blobs that should not be there

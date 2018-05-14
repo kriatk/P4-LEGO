@@ -59,6 +59,7 @@ I=imread('C:\Users\Stefan_Na\OneDrive\MOE\P4\Pictures\Set_10_bricks\2.jpg');
 Igray=rgb2gray(I);
 
 %% identify Blobs
+tic;
 % get binary image
 binaryImage=histogram_binarymap(I, thresholdHist,minimumSize,maximumSize,1);
 
@@ -85,19 +86,27 @@ numberOfBlobs = size(blobMeasurements, 1);
 % end
 % hold off;
 
-numberOfBlobs = size(blobMeasurements, 1);
-
+% numberOfBlobs = size(blobMeasurements, 1);
+toc
 %% identify color
+color.r=struct2cell(regionprops(labeledImage, I(:,:,1), 'PixelValues'))';
+color.g=struct2cell(regionprops(labeledImage, I(:,:,2), 'PixelValues'))';
+color.b=struct2cell(regionprops(labeledImage, I(:,:,3), 'PixelValues'))';
 
+for i=1:length(color.r)
+    blobMeasurements(i).color=cell2struct([mean(color.r{i}),mean(color.g{i}),mean(color.b{i})];    
+end
 %% run classifier over blobs and identify present blobs
+tic
 %           also identify blobs that should not be there
 
 stats = regionprops(binaryImage, Igray, 'Area', 'MajorAxisLength', 'MinorAxisLength', 'ConvexArea', 'Eccentricity', 'EquivDiameter', 'Perimeter', 'Solidity', 'MeanIntensity'); %for specific measurments
 stats = struct2table(stats);
     
 predictor = trainedClassifier.predictFcn(stats);
-
+toc
 %% show outlines of blobs (new method with labels)
+tic;
 %now with classification and named labels
 for i=1:length(blobMeasurements);
 pos(i,:) = blobMeasurements(i).BoundingBox;
@@ -116,9 +125,10 @@ label_outline = insertObjectAnnotation(I,'rectangle',pos,label_str,'TextBoxOpaci
 figure
 imshow(label_outline)
 title('Annotated bricks');
-    
+toc
 %% compare present bricks from the picture to set list
 %           output status of the set
+tic;
 brick_set = sort(brick_set);
 predictor = sort(predictor);
 
@@ -127,6 +137,6 @@ if isequal(predictor,brick_set)
 end
 
 % save box status with Scancode in Database
-
+toc;
 %% UR5 move tray away
 

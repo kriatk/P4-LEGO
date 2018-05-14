@@ -49,7 +49,7 @@ blobMeasurements= struct([blobMeasurements;regionprops(binaryImage, Igray, 'all'
 numberOfBlobs = size(blobMeasurements, 1);
   %% get color
 %   Pixelcolors = find(binaryImage);
-%   for 
+	
 end
 
 %% drop too samll blobs and adjust binary
