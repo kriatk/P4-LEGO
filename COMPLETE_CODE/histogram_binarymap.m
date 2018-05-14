@@ -26,7 +26,7 @@ allBlobAreas = [blobMeasurements.Area];
 allowableBlobs = allBlobAreas > minimumSize; % Take the small objects.
 allowableBlobs1 = allBlobAreas < maximumSize;
 allowableBlobs = allowableBlobs & allowableBlobs1;
-sum(allowableBlobs)
+'Numbe of Blobs:',sum(allowableBlobs)
 keeperIndexes = find(allowableBlobs);
 keeperBlobsImage = ismember(labeledImage, keeperIndexes);
 binarymap=keeperBlobsImage;

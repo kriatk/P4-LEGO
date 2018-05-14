@@ -3,6 +3,7 @@ clear all;
 close all;
 
 %% Settings
+tic;
 %camerasettings
 % obj = videoinput('winvideo', 2, 'MJPG_640x480'); 
 % set(obj,'ReturnedColorSpace','rgb');
@@ -22,8 +23,10 @@ minimumSize= 400;
 thresholdHist = 50; 
 
 % load classifier data and train
-load Feature_space.mat;
-[trainedClassifier, validationAccuracy] = trainClassifier(feature_space) 
+% load Feature_space.mat;
+load Feature_space_classifier.mat;
+
+% [trainedClassifier, validationAccuracy] = trainClassifier(feature_space) 
 
 % create class label library
 % 1-blue_med;
@@ -37,8 +40,8 @@ load Feature_space.mat;
 % 9-yellow_long;
 % 10-yellow_round;
 
-label_library = {1 'blue_med';2 'blue_small';3 'car';4 'gray';5 'green_plate';6 'red';7 'red_long';8 'white';9 'yellow_long';10 'yellow_round'};
-
+label_library = {'blue_med';'blue_small';'car';'gray';'green_plate';'red';'red_long';'white';'yellow_long';'yellow_round'};
+toc
 %% scan tag of box
 
 %% get present set from ID
@@ -56,6 +59,7 @@ I=imread('C:\Users\Stefan_Na\OneDrive\MOE\P4\Pictures\Set_10_bricks\2.jpg');
 Igray=rgb2gray(I);
 
 %% identify Blobs
+tic;
 % get binary image
 binaryImage=histogram_binarymap(I, thresholdHist,minimumSize,maximumSize,1);
 
@@ -66,35 +70,37 @@ blobMeasurements= regionprops(labeledImage, Igray, 'all');
 numberOfBlobs = size(blobMeasurements, 1);
 
 % show outlines of blobs
-eccentricities = [blobMeasurements.Eccentricity];
-idxOfSkittles = find(eccentricities);
-statsDefects = blobMeasurements(idxOfSkittles);
+% eccentricities = [blobMeasurements.Eccentricity];
+% idxOfSkittles = find(eccentricities);
+% statsDefects = blobMeasurements(idxOfSkittles);
 
-figure, imshow(I);
-hold on;
-for idx = 1 : length(idxOfSkittles)
-        h = rectangle('Position',statsDefects(idx).BoundingBox,'LineWidth',2);
-        set(h,'EdgeColor',[.75 0 0]);
-        hold on;
-end
-if idx ~= 1
-title(['There are ', num2str(numObjects), ' objects in the image!']);
-end
-hold off;
+% figure, imshow(I);
+% hold on;
+% for idx = 1 : length(idxOfSkittles)
+%         h = rectangle('Position',statsDefects(idx).BoundingBox,'LineWidth',2);
+%         set(h,'EdgeColor',[.75 0 0]);
+%         hold on;
+% end
+% if idx ~= 1
+% title(['There are ', num2str(numObjects), ' objects in the image!']);
+% end
+% hold off;
 
-numberOfBlobs = size(blobMeasurements, 1);
-
+% numberOfBlobs = size(blobMeasurements, 1);
+toc
 %% identify color
 
 %% run classifier over blobs and identify present blobs
+tic
 %           also identify blobs that should not be there
 
 stats = regionprops(binaryImage, Igray, 'Area', 'MajorAxisLength', 'MinorAxisLength', 'ConvexArea', 'Eccentricity', 'EquivDiameter', 'Perimeter', 'Solidity', 'MeanIntensity'); %for specific measurments
 stats = struct2table(stats);
     
 predictor = trainedClassifier.predictFcn(stats);
-
+toc
 %% show outlines of blobs (new method with labels)
+tic;
 %now with classification and named labels
 for i=1:length(blobMeasurements);
 pos(i,:) = blobMeasurements(i).BoundingBox;
@@ -105,7 +111,7 @@ end
 % in the label library it can look it up
 for i = 1:length(predictor);
     label_idx = predictor(i);
-    label = label_library(label_idx,2);
+    label = label_library(label_idx);
     label_str(i,1) = label;
 end
 
@@ -113,9 +119,10 @@ label_outline = insertObjectAnnotation(I,'rectangle',pos,label_str,'TextBoxOpaci
 figure
 imshow(label_outline)
 title('Annotated bricks');
-    
+toc
 %% compare present bricks from the picture to set list
 %           output status of the set
+tic;
 brick_set = sort(brick_set);
 predictor = sort(predictor);
 
@@ -124,6 +131,6 @@ if isequal(predictor,brick_set)
 end
 
 % save box status with Scancode in Database
-
+toc;
 %% UR5 move tray away
 
