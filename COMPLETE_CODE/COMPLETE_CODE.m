@@ -25,7 +25,7 @@ thresholdHist = 50;
 load Feature_space.mat;
 [trainedClassifier, validationAccuracy] = trainClassifier(feature_space) 
 
-% create class label legend table
+% create class label library
 % 1-blue_med;
 % 2-blue_small;
 % 3-car;
@@ -37,12 +37,12 @@ load Feature_space.mat;
 % 9-yellow_long;
 % 10-yellow_round;
 
-label_library = {1, 'blue_med';2 'blue_small';3 'car';4 'gray';5 'green_plate';6 'red';7 'red_long';8 'white';9 'yellow_long';10 'yellow_round'};
+label_library = {1 'blue_med';2 'blue_small';3 'car';4 'gray';5 'green_plate';6 'red';7 'red_long';8 'white';9 'yellow_long';10 'yellow_round'};
 
 %% scan tag of box
 
 %% get present set from ID
-% for now defining the set manualy (OBS do NOT name the variabel 'set'.. )
+% for now defining the set manualy, but something like this should come out from the barcode fucntion (OBS do NOT name the variabel 'set'.. )
 brick_set = [1 2 3 4 5 6 7 8 9 10];
 brick_set';
 
@@ -52,7 +52,7 @@ brick_set';
 %% Take picture
 % I = getsnapshot(obj);sound(100);
 % I=imread('C:\Users\Stefan_Na\OneDrive\MOE\P4\Pictures\Set_10_bricks\2.jpg');
-I=imread('D:\Google Drev\AAU\4 semester\P4\Training pictures\Single Bricks\Topside\Set_10_bricks\2.jpg');
+I=imread('D:\Google Drev\AAU\4 semester\P4\Training pictures\Single Bricks\Topside\Set_10_bricks\15.jpg');
 Igray=rgb2gray(I);
 
 %% identify Blobs
@@ -116,6 +116,11 @@ title('Annotated bricks');
     
     %% compare present bricks from the picture to set list
 %           output status of the set
+brick_set = sort(brick_set);
+predictor = sort(predictor);
+
+if isequal(predictor,brick_set)
+    print('Prediction  match the defined set')
 
 % save box status with Scancode in Database
 
