@@ -51,8 +51,8 @@ brick_set';
  
 %% Take picture
 % I = getsnapshot(obj);sound(100);
-I=imread('C:\Users\Stefan_Na\OneDrive\MOE\P4\Pictures\Set_10_bricks\2.jpg');
-% I=imread('D:\Google Drev\AAU\4 semester\P4\Training pictures\Single Bricks\Topside\Set_10_bricks\15.jpg');
+% I=imread('C:\Users\Stefan_Na\OneDrive\MOE\P4\Pictures\Set_10_bricks\2.jpg');
+I=imread('D:\Google Drev\AAU\4 semester\P4\Training pictures\Single Bricks\Topside\Set_10_bricks\15.jpg');
 Igray=rgb2gray(I);
 
 %% identify Blobs
@@ -113,6 +113,24 @@ label_outline = insertObjectAnnotation(I,'rectangle',pos,label_str,'TextBoxOpaci
 figure
 imshow(label_outline)
 title('Annotated bricks');
+
+%% show outlines of blobs (old stefans method)
+% eccentricities = [blobMeasurements.Eccentricity];
+% idxOfSkittles = find(eccentricities);
+% statsDefects = blobMeasurements(idxOfSkittles);
+% 
+% figure, imshow(I);
+% hold on;
+% for idx = 1 : length(idxOfSkittles)
+%         h = rectangle('Position',statsDefects(idx).BoundingBox,'LineWidth',2);
+%         set(h,'EdgeColor',[.75 0 0]);
+%         hold on;
+% end
+% if idx ~= 1
+% title(['There are ', num2str(numObjects), ' objects in the image!']);
+% end
+% hold off;
+
     
 %% compare present bricks from the picture to set list
 %           output status of the set
@@ -121,7 +139,6 @@ predictor = sort(predictor);
 
 if isequal(predictor,brick_set)
     print('Prediction  match the defined set')
-end
 
 % save box status with Scancode in Database
 
