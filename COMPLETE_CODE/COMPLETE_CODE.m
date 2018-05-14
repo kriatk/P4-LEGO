@@ -40,10 +40,10 @@ binaryImage=histogram_binarymap(I, thresholdHist,minimumSize,maximumSize,1);
 %get blob measurements
 [labeledImage,numObjects] = bwlabel(binaryImage, 8);
 blobMeasurements= regionprops(labeledImage, Igray, 'all');
-% blobMeasurements= struct([blobMeasurements;regionprops(binaryImage, Igray, 'Area', 'MajorAxisLength', 'MinorAxisLength', 'ConvexArea', 'Eccentricity', 'EquivDiameter', 'Perimeter', 'Solidity', 'MeanIntensity')]); %for specific measurments
+% blobMeasurements= regionprops(binaryImage, Igray, 'Area', 'MajorAxisLength', 'MinorAxisLength', 'ConvexArea', 'Eccentricity', 'EquivDiameter', 'Perimeter', 'Solidity', 'MeanIntensity'); %for specific measurments
 numberOfBlobs = size(blobMeasurements, 1);
 
-%% show outlines of blobs
+% show outlines of blobs
 eccentricities = [blobMeasurements.Eccentricity];
 idxOfSkittles = find(eccentricities);
 statsDefects = blobMeasurements(idxOfSkittles);
