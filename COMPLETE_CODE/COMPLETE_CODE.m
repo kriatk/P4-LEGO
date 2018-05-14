@@ -94,8 +94,10 @@ color.g=struct2cell(regionprops(labeledImage, I(:,:,2), 'PixelValues'))';
 color.b=struct2cell(regionprops(labeledImage, I(:,:,3), 'PixelValues'))';
 
 for i=1:length(color.r)
-    blobMeasurements(i).color=[mean(color.r{i}),mean(color.g{i}),mean(color.b{i})];    
+    blobMeasurements(i).color=[mean(color.r{i}),mean(color.g{i}),mean(color.b{i})];
+    blobMeasurements(i).colorLabel=colornames('MATLAB',blobMeasurements(i).color/255);
 end
+
 %% run classifier over blobs and identify present blobs
 tic
 %           also identify blobs that should not be there
@@ -118,6 +120,7 @@ end
 for i = 1:length(predictor);
     label_idx = predictor(i);
     label = label_library(label_idx);
+    blobMeasurements(i).label=label;
     label_str(i,1) = label;
 end
 
