@@ -1,31 +1,19 @@
 %% This is a script to detect one blob on a black surface
 clear all; close all; clc;
+addpath('./functions/');
 
 myFolder = 'C:\Users\Stefan_Na\OneDrive\MOE\P4\Pictures\Set_10_bricks'; % Define your working folder
 
 maximumSize= 15000; % 
 minimumSize= 500; % 
-thresholdHist = 50; %for Red
-
-% maximumSize= 5000; % for Red
-% minimumSize= 1000; % for Red
-% maximumSize= 11000; % for Gray
-% minimumSize= 9000; % for Gray
-
-% maximumSize= 11000; % for BlueCar
-% minimumSize= 9500; % for BlueCar
-
-thresholdHist = 50; %for Red
-% thresholdHist = 100; %for Red
-% thresholdHist = 52; %for Gray
-% thresholdHist = 41; %for BlueCar
-
+thresholdHist = 50; %keep at 50 for all features to have the same precondition
 
 filePattern = fullfile(myFolder, '*.jpg');
 pictures = dir(filePattern);
 picturesfull= {};
 
 blobMeasurements=struct([]);
+allcolor=struct([]);
 FileNames={};
 figure;
 for k = 1:length(pictures)
@@ -48,27 +36,24 @@ blobMeasurements= struct([blobMeasurements;regionprops(binaryImage, Igray, 'all'
 % blobMeasurements= struct([blobMeasurements;regionprops(binaryImage, Igray, 'Area', 'MajorAxisLength', 'MinorAxisLength', 'ConvexArea', 'Eccentricity', 'EquivDiameter', 'Perimeter', 'Solidity', 'MeanIntensity')]); %for specific measurments
 numberOfBlobs = size(blobMeasurements, 1);
   %% get color
-%   Pixelcolors = find(binaryImage);
-	
+r=regionprops(labeledImage, I(:,:,1), 'PixelValues');
+g=regionprops(labeledImage, I(:,:,2), 'PixelValues');
+b=regionprops(labeledImage, I(:,:,3), 'PixelValues');
+    for i=1:length(r)
+    rgb(i,1).test=1;
+    end 
+rgb=mergestruct(rgb,r);
+[rgb.r] = rgb.PixelValues;
+rgb = rmfield(rgb,'PixelValues');
+rgb=mergestruct(rgb,g);
+[rgb.g] = rgb.PixelValues;
+rgb = rmfield(rgb,'PixelValues');
+rgb=mergestruct(rgb,b);
+[rgb.b] = rgb.PixelValues;
+rgb = rmfield(rgb,'PixelValues');
+rgb = rmfield(rgb,'test');
+allcolor=struct([allcolor;rgb]);
+rgb=[];
 end
 
-%% drop too samll blobs and adjust binary
 
-% allBlobAreas = [blobMeasurements.Area];
-% allowableBlobs = allBlobAreas > 300; % Take the big objects.
-% keeperIndexes = find(allowableBlobs);
-% keeperBlobsImage = ismember(labeledImage, keeperIndexes);
-% % figure; imshow(keeperBlobsImage)
-% binaryImage=keeperBlobsImage;
-%% remove the small blobs from blobmeasurements
-% allBlobAreas = [blobMeasurements.Area];
-% notallowableBlobs = allBlobAreas < minimumSize; % Take the small objects.
-% notallowableBlobs1 = allBlobAreas > maximumSize;
-% notallowableBlobs=notallowableBlobs | notallowableBlobs1;
-% dropBlobs = find(notallowableBlobs);
-% 
-% for i=length(dropBlobs):-1:1
-% blobMeasurements(dropBlobs(i))=[];
-% end
-
-% blobMeasurments = struct2table(blobMeasurements);
