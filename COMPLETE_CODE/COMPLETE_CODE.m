@@ -5,22 +5,22 @@ addpath('./functions/');
 %% Settings
 tic;
 %camerasettings
-% obj = videoinput('winvideo', 2, 'MJPG_640x480'); 
-% set(obj,'ReturnedColorSpace','rgb');
-% 
-% src_obj = getselectedsource(obj); 
-% src_obj.Exposure = -3;
-% src_obj.Contrast = 15;
-% src_obj.Brightness = 10;
-% src_obj.ExposureMode = 'manual';
-% src_obj.BacklightCompensation = 'off';
-% src_obj.Sharpness = 100;
-% src_obj.Saturation = 50;
+obj = videoinput('winvideo', 2, 'MJPG_640x480'); 
+set(obj,'ReturnedColorSpace','rgb');
+
+src_obj = getselectedsource(obj); 
+src_obj.Exposure = -3;
+src_obj.Contrast = 15;
+src_obj.Brightness = 10;
+src_obj.ExposureMode = 'manual';
+src_obj.BacklightCompensation = 'off';
+src_obj.Sharpness = 100;
+src_obj.Saturation = 50;
 
 % binary image settings
 maximumSize= 15000; 
 minimumSize= 400; 
-thresholdHist = 50; 
+thresholdHist = 40; 
 
 % load classifier data and train
 % load Feature_space.mat;
@@ -53,8 +53,8 @@ brick_set';
 %          bricks are placed on tray and spread by hand
  
 %% Take picture
-% I = getsnapshot(obj);sound(100);
-I=imread('C:\Users\Stefan_Na\OneDrive\MOE\P4\Pictures\Set_10_bricks\2.jpg');
+I = getsnapshot(obj);sound(100);
+% I=imread('C:\Users\Stefan_Na\OneDrive\MOE\P4\Pictures\Set_10_bricks\2.jpg');
 % I=imread('D:\Google Drev\AAU\4 semester\P4\Training pictures\Single Bricks\Topside\Set_10_bricks\15.jpg');
 Igray=rgb2gray(I);
 

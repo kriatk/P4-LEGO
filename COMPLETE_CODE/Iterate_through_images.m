@@ -1,11 +1,11 @@
 %% This is a script to detect one blob on a black surface
 clear all; close all; clc;
 addpath('./functions/');
-myFolder = 'C:\Users\Stefan_Na\OneDrive\MOE\P4\Pictures\Set_10_bricks'; % Define your working folder
+myFolder = 'C:\Users\Stefan_Na\OneDrive\MOE\P4\Pictures\ONE_PIC\close bricks_10'; % Define your working folder
 
 maximumSize= 15000; % 
 minimumSize= 500; % 
-thresholdHist = 50; %for Red
+thresholdHist = 39 %for Red
 
 % maximumSize= 5000; % for Red
 % minimumSize= 1000; % for Red
@@ -15,7 +15,6 @@ thresholdHist = 50; %for Red
 % maximumSize= 11000; % for BlueCar
 % minimumSize= 9500; % for BlueCar
 
-thresholdHist = 50; %for Red
 % thresholdHist = 100; %for Red
 % thresholdHist = 52; %for Gray
 % thresholdHist = 41; %for BlueCar
