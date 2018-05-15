@@ -69,24 +69,6 @@ blobMeasurements= regionprops(labeledImage, Igray, 'all');
 % blobMeasurements= regionprops(binaryImage, Igray, 'Area', 'MajorAxisLength', 'MinorAxisLength', 'ConvexArea', 'Eccentricity', 'EquivDiameter', 'Perimeter', 'Solidity', 'MeanIntensity'); %for specific measurments
 numberOfBlobs = size(blobMeasurements, 1);
 
-% show outlines of blobs
-% eccentricities = [blobMeasurements.Eccentricity];
-% idxOfSkittles = find(eccentricities);
-% statsDefects = blobMeasurements(idxOfSkittles);
-
-% figure, imshow(I);
-% hold on;
-% for idx = 1 : length(idxOfSkittles)
-%         h = rectangle('Position',statsDefects(idx).BoundingBox,'LineWidth',2);
-%         set(h,'EdgeColor',[.75 0 0]);
-%         hold on;
-% end
-% if idx ~= 1
-% title(['There are ', num2str(numObjects), ' objects in the image!']);
-% end
-% hold off;
-
-% numberOfBlobs = size(blobMeasurements, 1);
 toc
 %% identify color
 color.r=struct2cell(regionprops(labeledImage, I(:,:,1), 'PixelValues'))';

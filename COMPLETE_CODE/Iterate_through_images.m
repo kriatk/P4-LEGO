@@ -1,6 +1,6 @@
 %% This is a script to detect one blob on a black surface
 clear all; close all; clc;
-
+addpath('./functions/');
 myFolder = 'C:\Users\Stefan_Na\OneDrive\MOE\P4\Pictures\Set_10_bricks'; % Define your working folder
 
 maximumSize= 15000; % 
