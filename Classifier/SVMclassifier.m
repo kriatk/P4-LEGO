@@ -1,7 +1,9 @@
 data = importdata('feature_space_fullset_faceup.mat');
 
 %these 2 belov takes... like.. A WHILE and will make you cpu on fire
-mdl = fitcecoc(data,'Label'); 
+t = templateSVM('KernelFunction','gaussian','Standardize', 1);
+
+mdl = fitcecoc(data,'Label', 'FitPosterior', 1, 'Learners', t); 
 CVMdl = crossval(mdl);
 
 oosLoss = kfoldLoss(CVMdl);

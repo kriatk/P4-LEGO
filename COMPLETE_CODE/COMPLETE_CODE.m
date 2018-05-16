@@ -26,12 +26,12 @@ thresholdHist = 50;
 % load Feature_space.mat;
 % load Feature_space_classifier.mat;
 % feature_space = importdata('feature_space_extended_allsides.mat');
-feature_space = importdata('feature_space_fullset_faceup.mat');
+%feature_space = importdata('feature_space_fullset_faceup.mat');
 
 %[trainedClassifier, validationAccuracy] = trainClassifier(feature_space) 
 %[trainedClassifier, validationAccuracy] = trainClassifier_svm_fg(feature_space)
 
-load trainedclassifier_extended_fu.mat;
+load mdl.mat;
 
 % create class label library
 % 1-blue_med;
@@ -95,7 +95,8 @@ tic
 stats = regionprops(binaryImage, Igray, 'Area', 'MajorAxisLength', 'MinorAxisLength', 'ConvexArea', 'Eccentricity', 'EquivDiameter', 'Perimeter', 'Solidity', 'MeanIntensity'); %for specific measurments
 stats = struct2table(stats);
     
-predictor = trainedClassifier.predictFcn(stats);
+%predictor = trainedClassifier.predictFcn(stats);
+[predictor,NegLoss,PBScore,Posterior] = predict(mdl,stats);
 toc
 %% show outlines of blobs (new method with labels)
 tic;
