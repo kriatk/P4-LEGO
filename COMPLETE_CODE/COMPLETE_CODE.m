@@ -60,7 +60,7 @@ brick_set';
 %% Take picture
 % I = getsnapshot(obj);sound(100);
 % I=imread('C:\Users\Stefan_Na\OneDrive\MOE\P4\Pictures\Set_10_bricks\2.jpg');
-I=imread('D:\Google Drev\AAU\4 semester\P4\Pictures\Training pictures\Testing_Sets\20_brick_tops\21.jpg');
+I=imread('D:\Google Drev\AAU\4 semester\P4\Pictures\Training pictures\Testing_Sets\20_brick_tops\10.jpg');
 Igray=rgb2gray(I);
 
 %% identify Blobs
