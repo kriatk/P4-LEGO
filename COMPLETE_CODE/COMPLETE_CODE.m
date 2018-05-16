@@ -25,10 +25,13 @@ thresholdHist = 50;
 % load classifier data and train
 % load Feature_space.mat;
 % load Feature_space_classifier.mat;
- feature_space = importdata('feature_space_extended_allsides.mat');
+% feature_space = importdata('feature_space_extended_allsides.mat');
+feature_space = importdata('feature_space_fullset_faceup.mat');
 
 %[trainedClassifier, validationAccuracy] = trainClassifier(feature_space) 
-[trainedClassifier, validationAccuracy] = trainClassifier_svm_fg(feature_space)
+%[trainedClassifier, validationAccuracy] = trainClassifier_svm_fg(feature_space)
+
+load trainedclassifier_extended_fu.mat;
 
 % create class label library
 % 1-blue_med;
