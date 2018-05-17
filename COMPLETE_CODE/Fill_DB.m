@@ -13,7 +13,7 @@ for i=1:length(label_library)
 collumn_names_set=collumn_names_set+", "+label_library(i);
 ones=ones +", 1";
 end
-ones="2,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0"
+ones="2,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0"
 
 prefs = setdbprefs('DataReturnFormat'); % Set preferences
 setdbprefs('DataReturnFormat','table'); % Set preferences

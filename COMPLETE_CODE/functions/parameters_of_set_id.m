@@ -12,9 +12,9 @@ sqlquery_lego_set_id_of_box_id=sprintf('SELECT * FROM legop4.lego_set_parameters
 curs = exec(conn,sqlquery_lego_set_id_of_box_id);
 
 curs = fetch(curs);
-parameters_of_set = table2array(curs.Data);
-parameters_of_set(1) =[];
-
+parameters_of_set1 = table2array(curs.Data);
+parameters_of_set1(1) =[];
+parameters_of_set=parameters_of_set1;
 close(curs)
 % ---------close----------------
 close(conn) % Close connection to database

@@ -1,12 +1,14 @@
 clc;
 clear all;
 close all;
-%%
+closepreview;
 addpath('./functions/');
 %% Settings
 tic;
+disp('initiate variables')
+
 %camerasettings
-obj = videoinput('winvideo', 2, 'MJPG_640x480'); 
+obj = videoinput('winvideo', 3, 'MJPG_640x480'); 
 set(obj,'ReturnedColorSpace','rgb');
 
 src_obj = getselectedsource(obj); 
@@ -20,12 +22,15 @@ src_obj.Saturation = 50;
 
 %% Bar Scanner init
 %Create video object for scanner and set parameters
-scan_obj = videoinput('winvideo', 3, 'RGB24_320x240'); 
+scan_obj = videoinput('winvideo', 1, 'RGB24_320x240'); 
 scan_obj.TriggerRepeat = Inf;
 scan_obj.FrameGrabInterval = 10;
 set(scan_obj,'ReturnedColorSpace','rgb');
 
 src_scan_obj = getselectedsource(obj); 
+
+% preview(obj)
+% preview(scan_obj)
 
 %Read video paraemters and setup according to the resolution
 get(src_scan_obj); 
@@ -38,7 +43,7 @@ close;
 % binary image settings
 maximumSize= 15000; 
 minimumSize= 400; 
-thresholdHist = 70; 
+thresholdHist = 50; 
 
 % UR5 settings
 ipAddress='192.168.1.13';
@@ -69,12 +74,13 @@ PoseBeforeStart=[0.0417   -1.6254    1.9681   -1.8968   -1.5953   -0.0682];
 % load classifier data and train
 % load Feature_space.mat;
 % load Feature_space_classifier.mat;
-% feature_space = importdata('feature_space_extended_allsides.mat');
- feature_space = importdata('feature_space_fullset_faceup.mat');
+%feature_space = importdata('feature_space_extended_allsides.mat');
+%  feature_space = importdata('feature_space_fullset_faceup.mat');
 
 %[trainedClassifier, validationAccuracy] = trainClassifier(feature_space) 
- [trainedClassifier, validationAccuracy] = trainClassifier_svm_fg(feature_space)
+% [trainedClassifier, validationAccuracy] = trainClassifier_svm_fg(feature_space)
 
+ load trainedclassifier_extended.mat;
 %load mdl.mat;
 
 % create class label library
@@ -82,14 +88,14 @@ basic_set = ["blue_6x2";"blue_2x1";"blue_car";"gray_26";"green_4x4";"red_8x4";"r
 extended_set = ["beige_4x2";"beige_8x1";"orange_4x2";"orange_round";"Prop";"red_4x2";"red_round";"violet_4x2";"white_4x2";"yellow_4x2"];
 label_library = [basic_set;extended_set];
 
-toc
 
 %% move tray using UR5
+tic;
 URcontrol.moveLinear(robotControl,'joint',PosePreTray);
 pause(2);
 URcontrol.gripperAction(robotControl,'open');
 pause(2);
-input('Make sure the tray is in the region and press enter')
+%input('Make sure the tray is in the region and press enter')
 
 URcontrol.moveLinear(robotControl,'joint',PoseTrayLoad);
 pause(2);
@@ -169,8 +175,8 @@ parameters_of_set = parameters_of_set_id(lego_set_id);
 % I=imread('D:\Google Drev\AAU\4 semester\P4\Pictures\Training pictures\Testing_Sets\20_brick_tops\10.jpg');
 Igray=rgb2gray(I);
 
-%% identify Blobs
-tic;
+% identify Blobs
+;
 % get binary image
 binaryImage=histogram_binarymap(I, thresholdHist,minimumSize,maximumSize,1);
 
@@ -180,19 +186,19 @@ blobMeasurements= regionprops(labeledImage, Igray, 'all');
 % blobMeasurements= regionprops(binaryImage, Igray, 'Area', 'MajorAxisLength', 'MinorAxisLength', 'ConvexArea', 'Eccentricity', 'EquivDiameter', 'Perimeter', 'Solidity', 'MeanIntensity'); %for specific measurments
 numberOfBlobs = size(blobMeasurements, 1);
 
-toc
-%% identify color
-color.r=struct2cell(regionprops(labeledImage, I(:,:,1), 'PixelValues'))';
-color.g=struct2cell(regionprops(labeledImage, I(:,:,2), 'PixelValues'))';
-color.b=struct2cell(regionprops(labeledImage, I(:,:,3), 'PixelValues'))';
 
-for i=1:length(color.r)
-    blobMeasurements(i).color=[mean(color.r{i}),mean(color.g{i}),mean(color.b{i})];
-    blobMeasurements(i).colorLabel=colornames('MATLAB',blobMeasurements(i).color/255);
-end
+%% identify color
+% color.r=struct2cell(regionprops(labeledImage, I(:,:,1), 'PixelValues'))';
+% color.g=struct2cell(regionprops(labeledImage, I(:,:,2), 'PixelValues'))';
+% color.b=struct2cell(regionprops(labeledImage, I(:,:,3), 'PixelValues'))';
+% 
+% for i=1:length(color.r)
+%     blobMeasurements(i).color=[mean(color.r{i}),mean(color.g{i}),mean(color.b{i})];
+%     blobMeasurements(i).colorLabel=colornames('MATLAB',blobMeasurements(i).color/255);
+% end
 
 %% run classifier over blobs and identify present blobs
-tic
+
 %           also identify blobs that should not be there
 
 stats = regionprops(binaryImage, Igray, 'Area', 'MajorAxisLength', 'MinorAxisLength', 'ConvexArea', 'Eccentricity', 'EquivDiameter', 'Perimeter', 'Solidity', 'MeanIntensity'); %for specific measurments
@@ -200,9 +206,9 @@ stats = struct2table(stats);
     
 predictor = trainedClassifier.predictFcn(stats);
 %[predictor,NegLoss,PBScore,Posterior] = predict(mdl, stats);
-toc
+
 %% show outlines of blobs (new method with labels)
-tic;
+;
 %now with classification and named labels
 for i=1:length(blobMeasurements);
 pos(i,:) = blobMeasurements(i).BoundingBox;
@@ -222,18 +228,17 @@ label_outline = insertObjectAnnotation(I,'rectangle',pos,label_str,'TextBoxOpaci
 figure
 imshow(label_outline)
 title('Annotated bricks');
-toc
+
 %% compare present bricks from the picture to set list
 %           output status of the set
 status_of_set = update_status(label_library,predictor,lego_box_id,parameters_of_set);%labels=
 stats_labels=[label_library';status_of_set]
 
 
-tic;
+;
 predictor = sort(predictor);
 
 % save box status with Scancode in Database
-toc;
 
 %% UR5 Move tray to designated area
 URcontrol.moveLinear(robotControl,'joint',PosePreCamera);
@@ -266,3 +271,5 @@ end
 pause(2);
 URcontrol.moveLinear(robotControl,'joint',PoseBeforeStart);
    pause(2);
+   
+timer = toc

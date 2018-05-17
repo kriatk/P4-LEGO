@@ -1,0 +1,28 @@
+testing cycle time:
+
+run	time
+1.	   72.7881
+2.	   54.4916
+no more init
+3.	46.49
+4.	45.78
+mouor brriks
+5.	51.50
+6.	46.11
+7.	45.27
+can i press ENTER faster????
+8. 	46.11
+10.	46.91
+no..
+11.	46.90
+removed wait for input
+12. 	44.1
+13. 	44.03
+14.	44.06
+
+
+
+
+
+
+
