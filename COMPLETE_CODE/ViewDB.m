@@ -28,7 +28,8 @@ curs = fetch(curs);
 % data_truth = curs.Data;
 close(curs)
 % Detected table
-curs = exec(conn,['SELECT * FROM legop4.lego_set_id_of_box_id']);
+curs = exec(conn,['SELECT * FRO
+    M legop4.lego_set_id_of_box_id']);
 curs = fetch(curs);
 lego_set_id_of_box_id = curs.Data;
 

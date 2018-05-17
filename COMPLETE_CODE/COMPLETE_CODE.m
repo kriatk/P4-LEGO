@@ -5,7 +5,7 @@ addpath('./functions/');
 %% Settings
 tic;
 %camerasettings
-% obj = videoinput('winvideo', 2, 'MJPG_640x480'); 
+% obj = videoinput('winvideo', 3, 'MJPG_640x480'); 
 % set(obj,'ReturnedColorSpace','rgb');
 
 % src_obj = getselectedsource(obj); 
@@ -19,14 +19,12 @@ tic;
 
 %% Bar Scanner init
 %Create video object for scanner and set parameters
-% scan_obj = videoinput('winvideo', 3, 'MJPG_320x240'); 
+% scan_obj = videoinput('winvideo', 1, 'RGB24_320x240'); 
 % scan_obj.TriggerRepeat = Inf;
-% scan_obj.FrameGrabInterval = 4;
+% scan_obj.FrameGrabInterval = 10;
 % set(scan_obj,'ReturnedColorSpace','rgb');
 % 
 % src_scan_obj = getselectedsource(obj); 
-% src_scan_obj.Exposure = -9;
-% src_scan_obj.Zoom = 1;
 % 
 % %Read video paraemters and setup according to the resolution
 % get(src_scan_obj); 
@@ -120,11 +118,10 @@ toc
 %% scan tag of box
 
 % figure;
-% start(obj);
-% 
+% start(scan_obj);
 % while (FinalCode1==0)
 %     %Read camera and show feed
-%     ip_im = getdata(obj,1);
+%     ip_im = getdata(scan_obj,1);
 %     imshow(ip_im);
 %     drawnow
 %     
@@ -165,7 +162,7 @@ toc
 %       end
 % end
 % %Need to close the feed
-% stop(obj)
+% stop(scan_obj)
 % lego_box_id=FinalCode;
 lego_box_id=1101;
 
@@ -220,7 +217,8 @@ stats = regionprops(binaryImage, Igray, 'Area', 'MajorAxisLength', 'MinorAxisLen
 stats = struct2table(stats);
     
 %predictor = trainedClassifier.predictFcn(stats);
-[predictor,NegLoss,PBScore,Posterior] = predict(mdl,stats);
+[predictor,NegLoss,PBScore,Posterior] = predict(
+,stats);
 toc
 %% show outlines of blobs (new method with labels)
 tic;
