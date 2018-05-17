@@ -1,70 +1,70 @@
 clc;
 clear all;
 close all;
+%%
 addpath('./functions/');
 %% Settings
 tic;
 %camerasettings
-% obj = videoinput('winvideo', 3, 'MJPG_640x480'); 
-% set(obj,'ReturnedColorSpace','rgb');
+obj = videoinput('winvideo', 3, 'MJPG_640x480'); 
+set(obj,'ReturnedColorSpace','rgb');
 
-% src_obj = getselectedsource(obj); 
-% src_obj.Exposure = -3;
-% src_obj.Contrast = 15;
-% src_obj.Brightness = 10;
-% src_obj.ExposureMode = 'manual';
-% src_obj.BacklightCompensation = 'off';
-% src_obj.Sharpness = 100;
-% src_obj.Saturation = 50;
+src_obj = getselectedsource(obj); 
+src_obj.Exposure = -3;
+src_obj.Contrast = 15;
+src_obj.Brightness = -10;
+src_obj.ExposureMode = 'manual';
+src_obj.BacklightCompensation = 'off';
+src_obj.Sharpness = 100;
+src_obj.Saturation = 50;
 
 %% Bar Scanner init
 %Create video object for scanner and set parameters
-% scan_obj = videoinput('winvideo', 1, 'RGB24_320x240'); 
-% scan_obj.TriggerRepeat = Inf;
-% scan_obj.FrameGrabInterval = 10;
-% set(scan_obj,'ReturnedColorSpace','rgb');
-% 
-% src_scan_obj = getselectedsource(obj); 
-% 
-% %Read video paraemters and setup according to the resolution
-% get(src_scan_obj); 
-% vidRes = get(scan_obj, 'VideoResolution'); 
-% nBands = get(scan_obj, 'NumberOfBands'); 
-% hImage = image( zeros(vidRes(2), vidRes(1), nBands) );  
-% FinalCode1=0;
+scan_obj = videoinput('winvideo', 1, 'RGB24_320x240'); 
+scan_obj.TriggerRepeat = Inf;
+scan_obj.FrameGrabInterval = 10;
+set(scan_obj,'ReturnedColorSpace','rgb');
 
+src_scan_obj = getselectedsource(obj); 
+
+%Read video paraemters and setup according to the resolution
+get(src_scan_obj); 
+vidRes = get(scan_obj, 'VideoResolution'); 
+nBands = get(scan_obj, 'NumberOfBands'); 
+hImage = image( zeros(vidRes(2), vidRes(1), nBands) );  
+FinalCode1=0;
+close;
 %%
 % binary image settings
 maximumSize= 15000; 
 minimumSize= 400; 
 thresholdHist = 50; 
 
-% % UR5 settings
-% ipAddress='192.168.1.13';
-% tcpPose=[0,0,0,0,0,0];
-% toolPayload=0.5;
-% 
-% robotMonitor=URmonitor(ipAddress);
-% robotControl=URcontrol(ipAddress,tcpPose,toolPayload);
-% 
-% %Coordinates
-% PoseCamera=[0.4629   -1.1676    1.5829   -1.9918   -1.5543    1.2292];
-% PosePreCamera=[ 0.4630   -1.1964    1.5333   -1.9133   -1.5541    1.2288];
-% PoseSet1=[-0.0889   -1.4685    1.8785   -1.9807   -1.5529    0.6771];
-% PoseScanner=[-0.2413   -0.8334    1.0456   -1.7931   -1.5611    2.0763];
-% PoseProblem=[-0.4618   -1.6047    2.1278   -2.0817   -1.5164    1.8570];
-% PoseTrayLoad=[0.0642   -1.5705    2.0940   -2.0948   -1.6042   -0.7208];
-% PoseSetMid1=[0.1633   -1.5682    2.0002   -2.0043   -1.5682    0.9346];
-% PoseComplete=[-0.2551   -0.8243    1.0325   -1.7785   -1.5199    2.0589];
-% PosePreSet1=[-0.4333   -1.6842    2.0164   -1.9126   -1.5597    1.8844];
-% PoseMid2=[-0.1728   -1.5981    1.9356   -1.9119   -1.5539    1.0538];
-% PoseMid3=[0.0456   -1.5538    1.8911   -1.9096   -1.5534    0.8551];
-% PosePreTray=[0.0644   -1.6393    1.9865   -1.9184   -1.6037   -0.7217];
-% PosePreComplete=[-0.2551   -0.8458    0.9409   -1.6654   -1.5198    2.0583];
-% PoseBeforeStart=[0.0417   -1.6254    1.9681   -1.8968   -1.5953   -0.0682];
+% UR5 settings
+ipAddress='192.168.1.13';
+tcpPose=[0,0,0,0,0,0];
+toolPayload=0.5;
 
-% BarcodeReader=0;
-% LegoIdentification=0;
+robotMonitor=URmonitor(ipAddress);
+robotControl=URcontrol(ipAddress,tcpPose,toolPayload);
+
+%Coordinates
+PoseCamera=[0.4629   -1.1676    1.5829   -1.9918   -1.5543    1.2292];
+PosePreCamera=[ 0.4630   -1.1964    1.5333   -1.9133   -1.5541    1.2288];
+PoseSet1=[-0.0889   -1.4685    1.8785   -1.9807   -1.5529    0.6771];
+PoseScanner=[-0.2413   -0.8334    1.0456   -1.7931   -1.5611    2.0763];
+PoseProblem=[-0.4618   -1.6047    2.1278   -2.0817   -1.5164    1.8570];
+PoseTrayLoad=[0.0642   -1.5705    2.0940   -2.0948   -1.6042   -0.7208];
+PoseSetMid1=[0.1633   -1.5682    2.0002   -2.0043   -1.5682    0.9346];
+PoseComplete=[-0.2551   -0.8243    1.0325   -1.7785   -1.5199    2.0589];
+PosePreSet1=[-0.4333   -1.6842    2.0164   -1.9126   -1.5597    1.8844];
+PoseMid2=[-0.1728   -1.5981    1.9356   -1.9119   -1.5539    1.0538];
+PoseMid3=[0.0456   -1.5538    1.8911   -1.9096   -1.5534    0.8551];
+PosePreTray=[0.0644   -1.6393    1.9865   -1.9184   -1.6037   -0.7217];
+PosePreComplete=[-0.2551   -0.8458    0.9409   -1.6654   -1.5198    2.0583];
+PoseBeforeStart=[0.0417   -1.6254    1.9681   -1.8968   -1.5953   -0.0682];
+
+%% Classifier initialization
 
 % load classifier data and train
 % load Feature_space.mat;
@@ -72,23 +72,12 @@ thresholdHist = 50;
 % feature_space = importdata('feature_space_extended_allsides.mat');
 % feature_space = importdata('feature_space_fullset_faceup.mat');
 
-%[trainedClassifier, validationAccuracy] = trainClassifier(feature_space) 
+% [trainedClassifier, validationAccuracy] = trainClassifier(feature_space) 
 % [trainedClassifier, validationAccuracy] = trainClassifier_svm_fg(feature_space)
 
 load mdl.mat;
 
 % create class label library
-% 1-blue_med;
-% 2-blue_small;
-% 3-car;
-% 4-gray;
-% 5-green_plate; 
-% 6-red;
-% 7-red_long;
-% 8-white;
-% 9-yellow_long;
-% 10-yellow_round;
-
 basic_set = ["blue_6x2";"blue_2x1";"blue_car";"gray_26";"green_4x4";"red_8x4";"red_8x1";"white2x2";"yellow_10x1";"yellow_round"];
 extended_set = ["beige_4x2";"beige_8x1";"orange_4x2";"orange_round";"Prop";"red_4x2";"red_round";"violet_4x2";"white_4x2";"yellow_4x2"];
 label_library = [basic_set;extended_set];
@@ -96,75 +85,75 @@ label_library = [basic_set;extended_set];
 toc
 
 %% move tray using UR5
-% URcontrol.moveLinear(robotControl,'joint',PosePreTray);
-% pause(2);
-% URcontrol.gripperAction(robotControl,'open');
-% pause(2);
-% input('Make sure the tray is in the region and press enter')
-% 
-% URcontrol.moveLinear(robotControl,'joint',PoseTrayLoad);
-% pause(2);
-% URcontrol.gripperAction(robotControl,'close');
-% pause(2);
-% URcontrol.moveLinear(robotControl,'joint',PosePreTray);
-% pause(2);
-% URcontrol.moveLinear(robotControl,'joint',PoseSetMid1);
-% pause(2);
-% URcontrol.moveLinear(robotControl,'joint',PosePreCamera);
-% pause(2);
-% URcontrol.moveLinear(robotControl,'joint',PoseCamera);
-% pause(2);
+URcontrol.moveLinear(robotControl,'joint',PosePreTray);
+pause(2);
+URcontrol.gripperAction(robotControl,'open');
+pause(2);
+input('Make sure the tray is in the region and press enter')
+
+URcontrol.moveLinear(robotControl,'joint',PoseTrayLoad);
+pause(2);
+URcontrol.gripperAction(robotControl,'close');
+pause(2);
+URcontrol.moveLinear(robotControl,'joint',PosePreTray);
+pause(2);
+URcontrol.moveLinear(robotControl,'joint',PoseSetMid1);
+pause(2);
+URcontrol.moveLinear(robotControl,'joint',PosePreCamera);
+pause(2);
+URcontrol.moveLinear(robotControl,'joint',PoseCamera);
+pause(2);
 
 %% scan tag of box
 
-% figure;
-% start(scan_obj);
-% while (FinalCode1==0)
-%     %Read camera and show feed
-%     ip_im = getdata(scan_obj,1);
-%     imshow(ip_im);
-%     drawnow
-%     
-%       %filter
-%       fi_im=imsharpen(ip_im);
-%       % Convert from RGB to Gray
-%       gray_im= rgb2gray(fi_im);
-%       %Threshold Image to black and white
-%       J = im2bw(gray_im, graythresh(gray_im));
-%       %Resize and process
-%       J=imresize(J,[240 320]);
-%       %Scanlines
-%       Row = [80 120 160]';
-%       %Transforms pixels in given rows into a feature vector.
-%       [R,F] = Feature(J, Row);
-%       %BAR detects bars from barcode feature signal.
-%       [Center, Width, Num] = Bar(F);
-%       %DETECTION returns sequence of indices to barcode guard bars
-%       [Sequence, Num] = Detection(Width, Num, 2);
-%       %CODEBOOK generats the look-up table for GTIN-13.
-%       [LGCode, LCode, GCode, RCode, LCodeRev, GCodeRev, RCodeRev] = Codebook;
-%       %Decode the barcode
-%       [Code, Conf] = Recognition(Center, Width, Sequence, Num, LGCode, LCode, GCode, RCode, LCodeRev, GCodeRev, RCodeRev);
-%       %Validation
-%       OddSum= Code(1:1)+Code(3:3)+Code(5:5)+Code(7:7)+Code(9:9)+Code(11:11)+Code(13:13);
-%       EvenSum = Code(2:2)+Code(4:4)+Code(6:6)+Code(8:8)+Code(10:10)+Code(12:12);
-%       Checksums = OddSum + 3*EvenSum;
-%       Valid = and((not(mod(Checksums,10))),(Conf >= 0.7));
-%       FinalCode=uint64(0);
-%       
-%       for i = 1 :13
-%           FinalCode=FinalCode*10 + uint64(Code(i:i));
-%       end
-%       if and(Valid ,(FinalCode ~= FinalCode1))
-%           Code'
-%           sprintf('%013i',FinalCode)
-%           FinalCode1 = FinalCode';
-%       end
-% end
-% %Need to close the feed
-% stop(scan_obj)
-% lego_box_id=FinalCode;
-lego_box_id=1101;
+figure;
+start(scan_obj);
+while (FinalCode1==0)
+    %Read camera and show feed
+    ip_im = getdata(scan_obj,1);
+    imshow(ip_im);
+    drawnow
+    
+      %filter
+      fi_im=imsharpen(ip_im);
+      % Convert from RGB to Gray
+      gray_im= rgb2gray(fi_im);
+      %Threshold Image to black and white
+      J = im2bw(gray_im, graythresh(gray_im));
+      %Resize and process
+      J=imresize(J,[240 320]);
+      %Scanlines
+      Row = [80 120 160]';
+      %Transforms pixels in given rows into a feature vector.
+      [R,F] = Feature(J, Row);
+      %BAR detects bars from barcode feature signal.
+      [Center, Width, Num] = Bar(F);
+      %DETECTION returns sequence of indices to barcode guard bars
+      [Sequence, Num] = Detection(Width, Num, 2);
+      %CODEBOOK generats the look-up table for GTIN-13.
+      [LGCode, LCode, GCode, RCode, LCodeRev, GCodeRev, RCodeRev] = Codebook;
+      %Decode the barcode
+      [Code, Conf] = Recognition(Center, Width, Sequence, Num, LGCode, LCode, GCode, RCode, LCodeRev, GCodeRev, RCodeRev);
+      %Validation
+      OddSum= Code(1:1)+Code(3:3)+Code(5:5)+Code(7:7)+Code(9:9)+Code(11:11)+Code(13:13);
+      EvenSum = Code(2:2)+Code(4:4)+Code(6:6)+Code(8:8)+Code(10:10)+Code(12:12);
+      Checksums = OddSum + 3*EvenSum;
+      Valid = and((not(mod(Checksums,10))),(Conf >= 0.7));
+      FinalCode=uint64(0);
+      
+      for i = 1 :13
+          FinalCode=FinalCode*10 + uint64(Code(i:i));
+      end
+      if and(Valid ,(FinalCode ~= FinalCode1))
+          Code'
+          sprintf('%013i',FinalCode)
+          FinalCode1 = FinalCode';
+      end
+end
+%Need to close the feed
+stop(scan_obj)
+lego_box_id=FinalCode1;
+close;
 
 
 %% get present set from ID
@@ -172,8 +161,6 @@ lego_box_id=1101;
 lego_set_id = read_set_id(lego_box_id);
 parameters_of_set = parameters_of_set_id(lego_set_id);
 
-brick_set = [1 2 3 4 5 6 7 8 9 10];
-brick_set';
 
 
 %% Take picture
@@ -212,8 +199,7 @@ stats = regionprops(binaryImage, Igray, 'Area', 'MajorAxisLength', 'MinorAxisLen
 stats = struct2table(stats);
     
 %predictor = trainedClassifier.predictFcn(stats);
-[predictor,NegLoss,PBScore,Posterior] = predict(
-,stats);
+[predictor,NegLoss,PBScore,Posterior] = predict(stats);
 toc
 %% show outlines of blobs (new method with labels)
 tic;
