@@ -5,6 +5,7 @@ t = templateSVM('KernelFunction','gaussian','Standardize', 1);
 
 mdl = fitcecoc(data,'Label', 'FitPosterior', 1, 'Learners', t); 
 CVMdl = crossval(mdl);
-
 oosLoss = kfoldLoss(CVMdl);
 
+%%
+fold = crossval(mdl, 'KFold', 10)
