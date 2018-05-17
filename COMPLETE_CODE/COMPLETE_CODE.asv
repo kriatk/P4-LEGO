@@ -29,9 +29,9 @@ thresholdHist = 50;
 %feature_space = importdata('feature_space_fullset_faceup.mat');
 
 %[trainedClassifier, validationAccuracy] = trainClassifier(feature_space) 
-% [trainedClassifier, validationAccuracy] = trainClassifier_svm_fg(feature_space)
+[trainedClassifier, validationAccuracy] = trainClassifier_svm_fg(feature_space)
 
-load mdl.mat;
+% load mdl.mat;
 
 % create class label library
 % 1-blue_med;
@@ -45,8 +45,8 @@ load mdl.mat;
 % 9-yellow_long;
 % 10-yellow_round;
 
-basic_set = ["blue_6x2";"blue_2x1";"blue_car";"gray_26";"green_4x4";"red_8x4";"red_8x1";"white2x2";"yellow_10x1";"yellow_round"];
-extended_set = ["beige_4x2";"beige_8x1";"orange_4x2";"orange_round";"Prop";"red_4x2";"red_round";"violet_4x2";"white_4x2";"yellow_4x2"];
+basic_set = {'blue_6x2';'blue_2x1';'blue_car';'gray_26';'green_4x4';'red_8x4';'red_8x1';'white2x2';'yellow_10x1';'yellow_round'};
+extended_set = {'beige_4x2';'beige_8x1';'orange_4x2';'orange_round';'Prop';'red_4x2';'red_round';'violet_4x2';'white_4x2';'yellow_4x2'};
 label_library = [basic_set;extended_set];
 
 toc
@@ -108,11 +108,11 @@ end
 % retrieve corresponding label names for the set 
 % set can be defined of labels in a random order from the barcode, as long as it is
 % in the label library it can look it up
-for i = 1:length(predictor)
+for i = 1:length(predictor);
     label_idx = predictor(i);
     label = label_library(label_idx);
     blobMeasurements(i).label=label;
-    label_str(i,1) = cellstr(label);
+    label_str(i,1) = label;
 end
 
 label_outline = insertObjectAnnotation(I,'rectangle',pos,label_str,'TextBoxOpacity',0.7,'FontSize',10);

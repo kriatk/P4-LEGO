@@ -20,6 +20,10 @@ conn = database('mysql-p4:europe-west1:lego-p4-db','root',''); % Make connection
 %deletequery = 'DELETE * FROM legop4.lego_set_truth WHERE set_id = ...';
 curs = exec(conn,['SELECT * ' ...
     'FROM legop4.lego_set_truth']);
+
+dbmeta = dmd(conn)
+t = tables(dbmeta,'legop4')
+
 curs = fetch(curs);
 data_truth = curs.Data;
 close(curs)
