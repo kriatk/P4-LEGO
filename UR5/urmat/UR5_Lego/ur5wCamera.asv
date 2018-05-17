@@ -1,0 +1,104 @@
+clear;
+%%
+obj = videoinput('winvideo', 3, 'MJPG_640x480'); 
+set(obj,'ReturnedColorSpace','rgb');
+
+src_obj = getselectedsource(obj); 
+src_obj.Exposure = -3;
+src_obj.Contrast = 15;
+src_obj.Brightness = -10;
+src_obj.ExposureMode = 'manual';
+src_obj.BacklightCompensation = 'off';
+src_obj.Sharpness = 100;
+src_obj.Saturation = 50;
+
+%% Specify robot parameters
+ipAddress='192.168.1.13';
+tcpPose=[0,0,0,0,0,0];
+toolPayload=0.5;
+
+%% Create Robot Objects
+robotMonitor=URmonitor(ipAddress);
+
+robotControl=URcontrol(ipAddress,tcpPose,toolPayload);
+
+%% Poses
+
+PoseCamera=[0.4629   -1.1676    1.5829   -1.9918   -1.5543    1.2292];
+PosePreCamera=[ 0.4630   -1.1964    1.5333   -1.9133   -1.5541    1.2288];
+PoseSet1=[-0.0889   -1.4685    1.8785   -1.9807   -1.5529    0.6771];
+PoseScanner=[-0.2413   -0.8334    1.0456   -1.7931   -1.5611    2.0763];
+PoseProblem=[-0.4618   -1.6047    2.1278   -2.0817   -1.5164    1.8570];
+PoseTrayLoad=[0.0642   -1.5705    2.0940   -2.0948   -1.6042   -0.7208];
+PoseSetMid1=[0.1633   -1.5682    2.0002   -2.0043   -1.5682    0.9346];
+PoseComplete=[-0.2551   -0.8243    1.0325   -1.7785   -1.5199    2.0589];
+PosePreSet1=[-0.4333   -1.6842    2.0164   -1.9126   -1.5597    1.8844];
+PoseMid2=[-0.1728   -1.5981    1.9356   -1.9119   -1.5539    1.0538];
+PoseMid3=[0.0456   -1.5538    1.8911   -1.9096   -1.5534    0.8551];
+PosePreTray=[0.0644   -1.6393    1.9865   -1.9184   -1.6037   -0.7217];
+PosePreComplete=[-0.2551   -0.8458    0.9409   -1.6654   -1.5198    2.0583];
+
+%% Program
+pause=pause(1.5);
+URcontrol.moveLinear(robotControl,'joint',PosePreTray);
+pause;
+URcontrol.gripperAction(robotControl,'open');
+pause;
+input('enter to grab')
+
+URcontrol.moveLinear(robotControl,'joint',PoseTrayLoad);
+pause;
+URcontrol.gripperAction(robotControl,'close');
+pause;
+URcontrol.moveLinear(robotControl,'joint',PosePreTray);
+pause;
+URcontrol.moveLinear(robotControl,'joint',PoseSetMid1);
+pause;
+URcontrol.moveLinear(robotControl,'joint',PosePreCamera);
+pause;
+URcontrol.moveLinear(robotControl,'joint',PoseCamera);
+pause;
+
+input('press enter')
+
+URcontrol.moveLinear(robotControl,'joint',PosePreCamera);
+pause;
+URcontrol.moveLinear(robotControl,'joint',PoseSetMid1);
+pause;
+URcontrol.moveLinear(robotControl,'joint',PoseMid2);
+pause;
+
+% if sum(status_of_set)~=0 %if it's a bad set moves to the problem corner
+if a=1
+   URcontrol.moveLinear(robotControl,'joint',PosePreSet1);
+   pause;
+   URcontrol.moveLinear(robotControl,'joint',PoseProblem);
+   pause;
+   URcontrol.gripperAction(robotControl,'open');
+   URcontrol.moveLinear(robotControl,'joint',PosePreSet1);
+   pause;
+else
+   URcontrol.moveLinear(robotControl,'joint',PosePreComplete);
+   pause;
+   URcontrol.moveLinear(robotControl,'joint',PoseComplete);
+   pause;
+   URcontrol.gripperAction(robotControl,'open');
+   URcontrol.moveLinear(robotControl,'joint',PosePreComplete);
+   pause;
+end
+    
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+

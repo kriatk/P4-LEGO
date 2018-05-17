@@ -48,19 +48,20 @@ thresholdHist = 50;
 % robotControl=URcontrol(ipAddress,tcpPose,toolPayload);
 % 
 % %Coordinates
-% StartPose=[-0.0442   -1.4493    1.7641   -1.8809   -1.5670    0.7125];
-% Pose1=[-0.7126   -1.2732    1.5578   -1.8527   -1.5657    0.0998];
-% PoseGrab=[-0.7127   -1.2350    1.6360   -1.9690   -1.5661    0.1005];
-% PoseBarcode=[-0.0442   -1.4493    1.7641   -1.8809   -1.5670    0.7125];
-% PoseRecognition=[0.3243   -0.8805    0.9512   -1.6426   -1.5687   -0.4554];
-% Pose2=[0.3464   -1.1174    1.3282   -1.7827   -1.5689   -0.4325];
-% Pose3=[0.4797   -1.4883    1.8087   -1.8917   -1.5695   -0.2988];
-% Pose4=[-0.0157   -1.4308    1.6685   -1.8279   -1.5428   -0.3813];
-% Pose5=[-0.4038   -1.3514    1.5637   -1.8133   -1.5417   -0.4430];
-% PoseFinish1=[0.5301   -1.4721    1.8850   -1.9839   -1.5694   -0.2932];
-% PoseFinish=[0.5178   -1.4569    1.9286   -2.0507   -1.5472   -0.3051];
-% PoseFinishLetGo=[0.5247   -1.4516    1.9227   -2.0440   -1.5599   -0.2982];
-% PosePostFinish=[0.5161   -1.5283    1.7942   -1.8481   -1.5432   -0.3080];
+% PoseCamera=[0.4629   -1.1676    1.5829   -1.9918   -1.5543    1.2292];
+% PosePreCamera=[ 0.4630   -1.1964    1.5333   -1.9133   -1.5541    1.2288];
+% PoseSet1=[-0.0889   -1.4685    1.8785   -1.9807   -1.5529    0.6771];
+% PoseScanner=[-0.2413   -0.8334    1.0456   -1.7931   -1.5611    2.0763];
+% PoseProblem=[-0.4618   -1.6047    2.1278   -2.0817   -1.5164    1.8570];
+% PoseTrayLoad=[0.0642   -1.5705    2.0940   -2.0948   -1.6042   -0.7208];
+% PoseSetMid1=[0.1633   -1.5682    2.0002   -2.0043   -1.5682    0.9346];
+% PoseComplete=[-0.2551   -0.8243    1.0325   -1.7785   -1.5199    2.0589];
+% PosePreSet1=[-0.4333   -1.6842    2.0164   -1.9126   -1.5597    1.8844];
+% PoseMid2=[-0.1728   -1.5981    1.9356   -1.9119   -1.5539    1.0538];
+% PoseMid3=[0.0456   -1.5538    1.8911   -1.9096   -1.5534    0.8551];
+% PosePreTray=[0.0644   -1.6393    1.9865   -1.9184   -1.6037   -0.7217];
+% PosePreComplete=[-0.2551   -0.8458    0.9409   -1.6654   -1.5198    2.0583];
+% PoseBeforeStart=[0.0417   -1.6254    1.9681   -1.8968   -1.5953   -0.0682];
 
 % BarcodeReader=0;
 % LegoIdentification=0;
@@ -95,25 +96,24 @@ label_library = [basic_set;extended_set];
 toc
 
 %% move tray using UR5
-% input('If tray is ready, press enter to start the process')
-% pause(2);
-% URcontrol.moveLinear(robotControl,'joint',StartPose);
+% URcontrol.moveLinear(robotControl,'joint',PosePreTray);
 % pause(2);
 % URcontrol.gripperAction(robotControl,'open');
-% pause(1);
-% input('If tray is ready, press enter')
+% pause(2);
+% input('Make sure the tray is in the region and press enter')
 % 
-% URcontrol.moveLinear(robotControl,'joint',Pose1,1,1);
-% pause(3);
-% URcontrol.moveLinear(robotControl,'joint',PoseGrab,1,1);
-% pause(1);
+% URcontrol.moveLinear(robotControl,'joint',PoseTrayLoad);
+% pause(2);
 % URcontrol.gripperAction(robotControl,'close');
-% pause(1);
-% URcontrol.moveLinear(robotControl,'joint',Pose1,1,1);
-% pause(1);
-% URcontrol.moveLinear(robotControl,'joint',PoseBarcode,1,1);
-% input('barcode scan done, press enter')
-% pause(1);
+% pause(2);
+% URcontrol.moveLinear(robotControl,'joint',PosePreTray);
+% pause(2);
+% URcontrol.moveLinear(robotControl,'joint',PoseSetMid1);
+% pause(2);
+% URcontrol.moveLinear(robotControl,'joint',PosePreCamera);
+% pause(2);
+% URcontrol.moveLinear(robotControl,'joint',PoseCamera);
+% pause(2);
 
 %% scan tag of box
 
@@ -176,11 +176,6 @@ brick_set = [1 2 3 4 5 6 7 8 9 10];
 brick_set';
 
 
-%% Move Tray to picture taking area (To use, needs to have stated somewhere BarcodeReader=1)
-% if BarcodeReader=1
-%     URcontrol.moveLinear(robotControl,'joint',PoseRecognition,1,1);
-%     pause(1.5);
-% end
 %% Take picture
 % I = getsnapshot(obj);sound(100);
 I=imread('C:\Users\Stefan_Na\OneDrive\MOE\P4\Pictures\Set_10_bricks\2.jpg');
@@ -259,19 +254,34 @@ end
 % save box status with Scancode in Database
 toc;
 
-%% UR5 move tray away (To use, needs to have stated somewhere LegoIdentification=1)
-% if LegoIdentification==1
-%     URcontrol.moveLinear(robotControl,'joint',Pose2,1,1);
-%     pause(1.5);
-%     URcontrol.moveLinear(robotControl,'joint',Pose3,1,1);
-%     pause(1.5);
+%% UR5 Move tray to designated area
+% URcontrol.moveLinear(robotControl,'joint',PosePreCamera);
+% pause(2);
+% URcontrol.moveLinear(robotControl,'joint',PoseSetMid1);
+% pause(2);
+% URcontrol.moveLinear(robotControl,'joint',PoseMid2);
+% pause(2);
 % 
-%     URcontrol.moveLinear(robotControl,'joint',PoseFinish1,1,1);
-%     pause(1.5);
-%     URcontrol.moveLinear(robotControl,'joint',PoseFinishLetGo,1,1);
-%     pause(1);
-%     URcontrol.gripperAction(robotControl,'open');
-%     pause(1);
-% 
-%     URcontrol.moveLinear(robotControl,'joint',PosePostFinish,1,1);
+% if sum(status_of_set)~=0 %if it's a bad set moves to the problem corner
+%    URcontrol.moveLinear(robotControl,'joint',PosePreSet1);
+%    pause(2);
+%    URcontrol.moveLinear(robotControl,'joint',PoseProblem);
+%    pause(2);
+%    URcontrol.gripperAction(robotControl,'open');
+%    pause(2);
+%    URcontrol.moveLinear(robotControl,'joint',PosePreSet1);
+%    pause(2);
+% else
+%    URcontrol.moveLinear(robotControl,'joint',PosePreComplete);
+%    pause(2);
+%    URcontrol.moveLinear(robotControl,'joint',PoseComplete);
+%    pause(2);
+%    URcontrol.gripperAction(robotControl,'open');
+%    pause(2);
+%    URcontrol.moveLinear(robotControl,'joint',PosePreComplete);
+%    pause(2);
 % end
+%     URcontrol.moveLinear(robotControl,'joint',PoseMid2);
+% pause(2);
+% URcontrol.moveLinear(robotControl,'joint',PoseBeforeStart);
+%    pause(2);
