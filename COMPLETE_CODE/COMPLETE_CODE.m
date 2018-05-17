@@ -51,9 +51,36 @@ label_library = [basic_set;extended_set];
 
 toc
 %% scan tag of box
+lego_box_id=1101;
+
+
 
 %% get present set from ID
 % for now defining the set manualy, but something like this should come out from the barcode fucntion (OBS do NOT name the variabel 'set'.. )
+lego_set_id = read_set_id(lego_box_id);
+parameters_of_set = parameters_of_set_id(lego_set_id);
+
+
+
+prefs = setdbprefs('DataReturnFormat'); % Set preferences
+setdbprefs('DataReturnFormat','table'); % Set preferences
+conn = database('mysql-p4:europe-west1:lego-p4-db','root',''); % Make connection to database
+
+% lego_set_id_of_box_id
+sqlquery_lego_set_id_of_box_id=sprintf('SELECT * FROM legop4.lego_set_parameters_of_set_id WHERE set_id=%d',lego_set_id)
+curs = exec(conn,sqlquery_lego_set_id_of_box_id);
+
+curs = fetch(curs);
+parameters_of_set = table2array(curs.Data);
+parameters_of_set(1) =[];
+
+close(curs)
+% ---------close----------------
+close(conn) % Close connection to database
+setdbprefs('DataReturnFormat',prefs) % Restore preferences
+clear prefs conn curs % Clear variables
+
+
 brick_set = [1 2 3 4 5 6 7 8 9 10];
 brick_set';
 
@@ -122,6 +149,10 @@ title('Annotated bricks');
 toc
 %% compare present bricks from the picture to set list
 %           output status of the set
+status_of_set = update_status(label_library,predictor,lego_box_id,parameters_of_set);_labels=
+stats_labels=[label_library';status_of_set]
+
+
 tic;
 brick_set = sort(brick_set);
 predictor = sort(predictor);

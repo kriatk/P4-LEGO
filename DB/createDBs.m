@@ -5,13 +5,13 @@ label_library = [basic_set;extended_set];
 
 collumn_names_box="box_id int"
 for i=1:length(label_library)
-collumn_names_box=collumn_names_box +", "+label_library(i)+" varchar(255)"
+collumn_names_box=collumn_names_box +", "+label_library(i)+" int";
 end
 
 
 collumn_names_set="set_id int"
 for i=1:length(label_library)
-collumn_names_set=collumn_names_set+", "+label_library(i)+" varchar(255)"
+collumn_names_set=collumn_names_set+", "+label_library(i)+" int";
 end
 
 %% create DBs
@@ -27,15 +27,18 @@ sqlquery_lego_set_parameters_of_set_id=sprintf('CREATE TABLE if not exists legop
 sqlquery_lego_box_status=sprintf('CREATE TABLE if not exists legop4.lego_box_status(%s)',collumn_names_box);
 
 
-curs = exec(conn,sqlquery_lego_set_id_of_box_id);
+% curs = exec(conn,sqlquery_lego_set_id_of_box_id);
 curs = exec(conn,sqlquery_lego_set_parameters_of_set_id);
-curs = exec(conn,sqlquery_lego_box_status);
+% curs = exec(conn,sqlquery_lego_box_status);
 
 curs = fetch(curs);
 DATA = curs.Data;
 
 
-% curs = exec(conn,'DROP TABLE legop4.lego_box_parameters_of_box_id');
+% curs = exec(conn,'DROP TABLE legop4.lego_set_id_of_box_id');
+% curs = exec(conn,'DROP TABLE legop4.lego_set_parameters_of_set_id');
+% curs = exec(conn,'DROP TABLE legop4.lego_box_status');
+
 close(curs)
 dbmeta = dmd(conn)
 t = tables(dbmeta,'legop4')
