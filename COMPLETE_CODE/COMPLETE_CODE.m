@@ -6,13 +6,13 @@ addpath('./functions/');
 %% Settings
 tic;
 %camerasettings
-obj = videoinput('winvideo', 3, 'MJPG_640x480'); 
+obj = videoinput('winvideo', 2, 'MJPG_640x480'); 
 set(obj,'ReturnedColorSpace','rgb');
 
 src_obj = getselectedsource(obj); 
 src_obj.Exposure = -3;
 src_obj.Contrast = 15;
-src_obj.Brightness = -10;
+src_obj.Brightness = 10;
 src_obj.ExposureMode = 'manual';
 src_obj.BacklightCompensation = 'off';
 src_obj.Sharpness = 100;
@@ -20,7 +20,7 @@ src_obj.Saturation = 50;
 
 %% Bar Scanner init
 %Create video object for scanner and set parameters
-scan_obj = videoinput('winvideo', 1, 'RGB24_320x240'); 
+scan_obj = videoinput('winvideo', 3, 'RGB24_320x240'); 
 scan_obj.TriggerRepeat = Inf;
 scan_obj.FrameGrabInterval = 10;
 set(scan_obj,'ReturnedColorSpace','rgb');
@@ -38,7 +38,7 @@ close;
 % binary image settings
 maximumSize= 15000; 
 minimumSize= 400; 
-thresholdHist = 50; 
+thresholdHist = 70; 
 
 % UR5 settings
 ipAddress='192.168.1.13';
@@ -70,12 +70,12 @@ PoseBeforeStart=[0.0417   -1.6254    1.9681   -1.8968   -1.5953   -0.0682];
 % load Feature_space.mat;
 % load Feature_space_classifier.mat;
 % feature_space = importdata('feature_space_extended_allsides.mat');
-% feature_space = importdata('feature_space_fullset_faceup.mat');
+ feature_space = importdata('feature_space_fullset_faceup.mat');
 
-% [trainedClassifier, validationAccuracy] = trainClassifier(feature_space) 
-% [trainedClassifier, validationAccuracy] = trainClassifier_svm_fg(feature_space)
+%[trainedClassifier, validationAccuracy] = trainClassifier(feature_space) 
+ [trainedClassifier, validationAccuracy] = trainClassifier_svm_fg(feature_space)
 
-load mdl.mat;
+%load mdl.mat;
 
 % create class label library
 basic_set = ["blue_6x2";"blue_2x1";"blue_car";"gray_26";"green_4x4";"red_8x4";"red_8x1";"white2x2";"yellow_10x1";"yellow_round"];
@@ -164,8 +164,8 @@ parameters_of_set = parameters_of_set_id(lego_set_id);
 
 
 %% Take picture
-% I = getsnapshot(obj);sound(100);
-I=imread('C:\Users\Stefan_Na\OneDrive\MOE\P4\Pictures\Set_10_bricks\2.jpg');
+ I = getsnapshot(obj);sound(100);
+% I=imread('C:\Users\Stefan_Na\OneDrive\MOE\P4\Pictures\Set_10_bricks\2.jpg');
 % I=imread('D:\Google Drev\AAU\4 semester\P4\Pictures\Training pictures\Testing_Sets\20_brick_tops\10.jpg');
 Igray=rgb2gray(I);
 
@@ -198,8 +198,8 @@ tic
 stats = regionprops(binaryImage, Igray, 'Area', 'MajorAxisLength', 'MinorAxisLength', 'ConvexArea', 'Eccentricity', 'EquivDiameter', 'Perimeter', 'Solidity', 'MeanIntensity'); %for specific measurments
 stats = struct2table(stats);
     
-%predictor = trainedClassifier.predictFcn(stats);
-[predictor,NegLoss,PBScore,Posterior] = predict(stats);
+predictor = trainedClassifier.predictFcn(stats);
+%[predictor,NegLoss,PBScore,Posterior] = predict(mdl, stats);
 toc
 %% show outlines of blobs (new method with labels)
 tic;
@@ -230,44 +230,39 @@ stats_labels=[label_library';status_of_set]
 
 
 tic;
-brick_set = sort(brick_set);
 predictor = sort(predictor);
-
-if isequal(predictor,brick_set)
-    print('Prediction  match the defined set')
-end
 
 % save box status with Scancode in Database
 toc;
 
 %% UR5 Move tray to designated area
-% URcontrol.moveLinear(robotControl,'joint',PosePreCamera);
-% pause(2);
-% URcontrol.moveLinear(robotControl,'joint',PoseSetMid1);
-% pause(2);
-% URcontrol.moveLinear(robotControl,'joint',PoseMid2);
-% pause(2);
-% 
-% if sum(status_of_set)~=0 %if it's a bad set moves to the problem corner
-%    URcontrol.moveLinear(robotControl,'joint',PosePreSet1);
-%    pause(2);
-%    URcontrol.moveLinear(robotControl,'joint',PoseProblem);
-%    pause(2);
-%    URcontrol.gripperAction(robotControl,'open');
-%    pause(2);
-%    URcontrol.moveLinear(robotControl,'joint',PosePreSet1);
-%    pause(2);
-% else
-%    URcontrol.moveLinear(robotControl,'joint',PosePreComplete);
-%    pause(2);
-%    URcontrol.moveLinear(robotControl,'joint',PoseComplete);
-%    pause(2);
-%    URcontrol.gripperAction(robotControl,'open');
-%    pause(2);
-%    URcontrol.moveLinear(robotControl,'joint',PosePreComplete);
-%    pause(2);
-% end
-%     URcontrol.moveLinear(robotControl,'joint',PoseMid2);
-% pause(2);
-% URcontrol.moveLinear(robotControl,'joint',PoseBeforeStart);
-%    pause(2);
+URcontrol.moveLinear(robotControl,'joint',PosePreCamera);
+pause(2);
+URcontrol.moveLinear(robotControl,'joint',PoseSetMid1);
+pause(2);
+URcontrol.moveLinear(robotControl,'joint',PoseMid2);
+pause(2);
+
+if sum(status_of_set)~=0 %if it's a bad set moves to the problem corner
+   URcontrol.moveLinear(robotControl,'joint',PosePreSet1);
+   pause(2);
+   URcontrol.moveLinear(robotControl,'joint',PoseProblem);
+   pause(2);
+   URcontrol.gripperAction(robotControl,'open');
+   pause(2);
+   URcontrol.moveLinear(robotControl,'joint',PosePreSet1);
+   pause(2);
+else
+   URcontrol.moveLinear(robotControl,'joint',PosePreComplete);
+   pause(2);
+   URcontrol.moveLinear(robotControl,'joint',PoseComplete);
+   pause(2);
+   URcontrol.gripperAction(robotControl,'open');
+   pause(2);
+   URcontrol.moveLinear(robotControl,'joint',PosePreComplete);
+   pause(2);
+end
+    URcontrol.moveLinear(robotControl,'joint',PoseMid2);
+pause(2);
+URcontrol.moveLinear(robotControl,'joint',PoseBeforeStart);
+   pause(2);

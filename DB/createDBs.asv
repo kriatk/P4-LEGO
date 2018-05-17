@@ -21,13 +21,13 @@ setdbprefs('DataReturnFormat','table'); % Set preferences
 conn = database('mysql-p4:europe-west1:lego-p4-db','root',''); % Make connection to database
 
 % lego_set_id_of_box_id
-sqlquery_lego_set_id_of_box_id='CREATE TABLE if not exists legop4.lego_set_id_of_box_id(box_id int,set_id int)';
+sqlquery_lego_set_id_of_box_id='CREATE TABLE if not exists legop4.lego_set_id_of_box_id(box_id bigint,set_id int)';
 % lego_set_parameters_of_set_id
 sqlquery_lego_set_parameters_of_set_id=sprintf('CREATE TABLE if not exists legop4.lego_set_parameters_of_set_id(%s)',collumn_names_set);
 sqlquery_lego_box_status=sprintf('CREATE TABLE if not exists legop4.lego_box_status(%s)',collumn_names_box);
 
 
-curs = exec(conn,sqlquery_lego_set_id_of_box_id);
+% curs = exec(conn,sqlquery_lego_set_id_of_box_id)
 % curs = exec(conn,sqlquery_lego_set_parameters_of_set_id);
 % curs = exec(conn,sqlquery_lego_box_status);
 

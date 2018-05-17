@@ -27,9 +27,9 @@ sqlquery_lego_set_parameters_of_set_id=sprintf('CREATE TABLE if not exists legop
 sqlquery_lego_box_status=sprintf('CREATE TABLE if not exists legop4.lego_box_status(%s)',collumn_names_box);
 
 
-curs = exec(conn,sqlquery_lego_set_id_of_box_id)
-% curs = exec(conn,sqlquery_lego_set_parameters_of_set_id);
-curs = exec(conn,sqlquery_lego_box_status);
+% curs = exec(conn,sqlquery_lego_set_id_of_box_id)
+curs = exec(conn,sqlquery_lego_set_parameters_of_set_id);
+% curs = exec(conn,sqlquery_lego_box_status);
 
 % curs = fetch(curs);
 % DATA = curs.Data;
