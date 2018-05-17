@@ -32,9 +32,9 @@ status_of_set=parameters_of_set;
 used_bricks=[];
 for i=1:length(predictor)
 if sum(ismember(used_bricks,predictor(i))) == 0
-amount_of_bricks=sum(ismember(predictor,predictor(i)));
-used_bricks=[used_bricks,predictor(i)];
-status_of_set(predictor(i))=status_of_set(predictor(i))-amount_of_bricks
+amount_of_bricks=sum(ismember(predictor,predictor(i)))
+used_bricks=[used_bricks,predictor(i)]
+status_of_set(predictor(i))=amount_of_bricks-parameters_of_set(predictor(i))
 
 
 

@@ -19,21 +19,21 @@ tic;
 
 %% Bar Scanner init
 %Create video object for scanner and set parameters
-% scan_obj = videoinput('winvideo', 3, 'MJPG_320x240'); 
-% scan_obj.TriggerRepeat = Inf;
-% scan_obj.FrameGrabInterval = 4;
-% set(scan_obj,'ReturnedColorSpace','rgb');
-% 
-% src_scan_obj = getselectedsource(obj); 
-% src_scan_obj.Exposure = -9;
-% src_scan_obj.Zoom = 1;
-% 
-% %Read video paraemters and setup according to the resolution
-% get(src_scan_obj); 
-% vidRes = get(scan_obj, 'VideoResolution'); 
-% nBands = get(scan_obj, 'NumberOfBands'); 
-% hImage = image( zeros(vidRes(2), vidRes(1), nBands) );  
-% FinalCode1=0;
+scan_obj = videoinput('winvideo', 3, 'MJPG_320x240'); 
+scan_obj.TriggerRepeat = Inf;
+scan_obj.FrameGrabInterval = 4;
+set(scan_obj,'ReturnedColorSpace','rgb');
+
+src_scan_obj = getselectedsource(obj); 
+src_scan_obj.Exposure = -9;
+src_scan_obj.Zoom = 1;
+
+%Read video paraemters and setup according to the resolution
+get(src_scan_obj); 
+vidRes = get(scan_obj, 'VideoResolution'); 
+nBands = get(scan_obj, 'NumberOfBands'); 
+hImage = image( zeros(vidRes(2), vidRes(1), nBands) );  
+FinalCode1=0;
 
 %%
 % binary image settings
@@ -119,61 +119,82 @@ toc
 
 %% scan tag of box
 
-% figure;
-% start(obj);
-% 
-% while (FinalCode1==0)
-%     %Read camera and show feed
-%     ip_im = getdata(obj,1);
-%     imshow(ip_im);
-%     drawnow
-%     
-%       %filter
-%       fi_im=imsharpen(ip_im);
-%       % Convert from RGB to Gray
-%       gray_im= rgb2gray(fi_im);
-%       %Threshold Image to black and white
-%       J = im2bw(gray_im, graythresh(gray_im));
-%       %Resize and process
-%       J=imresize(J,[240 320]);
-%       %Scanlines
-%       Row = [80 120 160]';
-%       %Transforms pixels in given rows into a feature vector.
-%       [R,F] = Feature(J, Row);
-%       %BAR detects bars from barcode feature signal.
-%       [Center, Width, Num] = Bar(F);
-%       %DETECTION returns sequence of indices to barcode guard bars
-%       [Sequence, Num] = Detection(Width, Num, 2);
-%       %CODEBOOK generats the look-up table for GTIN-13.
-%       [LGCode, LCode, GCode, RCode, LCodeRev, GCodeRev, RCodeRev] = Codebook;
-%       %Decode the barcode
-%       [Code, Conf] = Recognition(Center, Width, Sequence, Num, LGCode, LCode, GCode, RCode, LCodeRev, GCodeRev, RCodeRev);
-%       %Validation
-%       OddSum= Code(1:1)+Code(3:3)+Code(5:5)+Code(7:7)+Code(9:9)+Code(11:11)+Code(13:13);
-%       EvenSum = Code(2:2)+Code(4:4)+Code(6:6)+Code(8:8)+Code(10:10)+Code(12:12);
-%       Checksums = OddSum + 3*EvenSum;
-%       Valid = and((not(mod(Checksums,10))),(Conf >= 0.7));
-%       FinalCode=uint64(0);
-%       
-%       for i = 1 :13
-%           FinalCode=FinalCode*10 + uint64(Code(i:i));
-%       end
-%       if and(Valid ,(FinalCode ~= FinalCode1))
-%           Code'
-%           sprintf('%013i',FinalCode)
-%           FinalCode1 = FinalCode';
-%       end
-% end
-% %Need to close the feed
-% stop(obj)
-% lego_box_id=FinalCode;
-lego_box_id=1101;
+figure;
+start(obj);
+
+while (FinalCode1==0)
+    %Read camera and show feed
+    ip_im = getdata(obj,1);
+    imshow(ip_im);
+    drawnow
+    
+      %filter
+      fi_im=imsharpen(ip_im);
+      % Convert from RGB to Gray
+      gray_im= rgb2gray(fi_im);
+      %Threshold Image to black and white
+      J = im2bw(gray_im, graythresh(gray_im));
+      %Resize and process
+      J=imresize(J,[240 320]);
+      %Scanlines
+      Row = [80 120 160]';
+      %Transforms pixels in given rows into a feature vector.
+      [R,F] = Feature(J, Row);
+      %BAR detects bars from barcode feature signal.
+      [Center, Width, Num] = Bar(F);
+      %DETECTION returns sequence of indices to barcode guard bars
+      [Sequence, Num] = Detection(Width, Num, 2);
+      %CODEBOOK generats the look-up table for GTIN-13.
+      [LGCode, LCode, GCode, RCode, LCodeRev, GCodeRev, RCodeRev] = Codebook;
+      %Decode the barcode
+      [Code, Conf] = Recognition(Center, Width, Sequence, Num, LGCode, LCode, GCode, RCode, LCodeRev, GCodeRev, RCodeRev);
+      %Validation
+      OddSum= Code(1:1)+Code(3:3)+Code(5:5)+Code(7:7)+Code(9:9)+Code(11:11)+Code(13:13);
+      EvenSum = Code(2:2)+Code(4:4)+Code(6:6)+Code(8:8)+Code(10:10)+Code(12:12);
+      Checksums = OddSum + 3*EvenSum;
+      Valid = and((not(mod(Checksums,10))),(Conf >= 0.7));
+      FinalCode=uint64(0);
+      
+      for i = 1 :13
+          FinalCode=FinalCode*10 + uint64(Code(i:i));
+      end
+      if and(Valid ,(FinalCode ~= FinalCode1))
+          Code'
+          sprintf('%013i',FinalCode)
+          FinalCode1 = FinalCode';
+      end
+end
+%Need to close the feed
+stop(obj)
+lego_box_id=FinalCode;
+
 
 
 %% get present set from ID
 % for now defining the set manualy, but something like this should come out from the barcode fucntion (OBS do NOT name the variabel 'set'.. )
 lego_set_id = read_set_id(lego_box_id);
 parameters_of_set = parameters_of_set_id(lego_set_id);
+
+
+
+prefs = setdbprefs('DataReturnFormat'); % Set preferences
+setdbprefs('DataReturnFormat','table'); % Set preferences
+conn = database('mysql-p4:europe-west1:lego-p4-db','root',''); % Make connection to database
+
+% lego_set_id_of_box_id
+sqlquery_lego_set_id_of_box_id=sprintf('SELECT * FROM legop4.lego_set_parameters_of_set_id WHERE set_id=%d',lego_set_id)
+curs = exec(conn,sqlquery_lego_set_id_of_box_id);
+
+curs = fetch(curs);
+parameters_of_set = table2array(curs.Data);
+parameters_of_set(1) =[];
+
+close(curs)
+% ---------close----------------
+close(conn) % Close connection to database
+setdbprefs('DataReturnFormat',prefs) % Restore preferences
+clear prefs conn curs % Clear variables
+
 
 brick_set = [1 2 3 4 5 6 7 8 9 10];
 brick_set';

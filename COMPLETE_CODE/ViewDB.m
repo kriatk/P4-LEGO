@@ -25,7 +25,7 @@ dbmeta = dmd(conn)
 t = tables(dbmeta,'legop4')
 
 curs = fetch(curs);
-data_truth = curs.Data;
+% data_truth = curs.Data;
 close(curs)
 % Detected table
 curs = exec(conn,['SELECT * FROM legop4.lego_set_id_of_box_id']);
