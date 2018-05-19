@@ -1,7 +1,7 @@
 %% This is a script to detect one blob on a black surface
 clear all; close all; clc;
 
-myFolder = 'C:\Users\Stefan_Na\OneDrive\MOE\P4\Pictures\Red_long'; % Define your working folder
+myFolder = 'C:\Users\Stefan_Na\OneDrive\MOE\P4\Pictures\Set_10_bricks'; % Define your working folder
 
 maximumSize= 15000; % 
 minimumSize= 500; % 
@@ -30,20 +30,37 @@ for k = 1:length(pictures)
   %% get Blob measurements
 
 labeledImage = bwlabel(binaryImage, 8);
-blobMeasurements_pre=regionprops(labeledImage, Igray, 'Area', 'MajorAxisLength', 'MinorAxisLength', 'ConvexArea', 'Eccentricity', 'EquivDiameter', 'Perimeter', 'Solidity', 'MeanIntensity');
-
+blobMeasurements=
 hsv=rgb2hsv(I);
 hue=hsv(:,:,1);
 color=regionprops(labeledImage, hue, 'PixelValues');
 
     for i=1:length(color)
-    blobMeasurements_pre(i).meanHue=mean(color(i).PixelValues);
+    stats(i).meanHue=mean(color(i).PixelValues);
     end 
 
-blobMeasurements= struct([blobMeasurements;blobMeasurements_pre]);
+blobMeasurements= struct([blobMeasurements;regionprops(binaryImage, Igray, 'all')]);
 % blobMeasurements= struct([blobMeasurements;regionprops(binaryImage, Igray, 'Area', 'MajorAxisLength', 'MinorAxisLength', 'ConvexArea', 'Eccentricity', 'EquivDiameter', 'Perimeter', 'Solidity', 'MeanIntensity')]); %for specific measurments
 numberOfBlobs = size(blobMeasurements, 1);
-  
+  %% get color
+r=regionprops(labeledImage, I(:,:,1), 'PixelValues');
+g=regionprops(labeledImage, I(:,:,2), 'PixelValues');
+b=regionprops(labeledImage, I(:,:,3), 'PixelValues');
+    for i=1:length(r)
+    rgb(i,1).test=1;
+    end 
+rgb=mergestruct(rgb,r);
+[rgb.r] = rgb.PixelValues;
+rgb = rmfield(rgb,'PixelValues');
+rgb=mergestruct(rgb,g);
+[rgb.g] = rgb.PixelValues;
+rgb = rmfield(rgb,'PixelValues');
+rgb=mergestruct(rgb,b);
+[rgb.b] = rgb.PixelValues;
+rgb = rmfield(rgb,'PixelValues');
+rgb = rmfield(rgb,'test');
+allcolor=struct([allcolor;rgb]);
+rgb=[];
 end
 
 
