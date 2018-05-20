@@ -22,15 +22,15 @@ src_obj.Saturation = 50;
 
 %% Bar Scanner init
 %Create video object for scanner and set parameters
-scan_obj = videoinput('winvideo', 1, 'RGB24_320x240'); 
+scan_obj = videoinput('winvideo', 2, 'RGB24_320x240'); 
 scan_obj.TriggerRepeat = Inf;
 scan_obj.FrameGrabInterval = 10;
 set(scan_obj,'ReturnedColorSpace','rgb');
 
 src_scan_obj = getselectedsource(obj); 
 
-% preview(obj)
-% preview(scan_obj)
+preview(obj)
+preview(scan_obj)
 
 %Read video paraemters and setup according to the resolution
 get(src_scan_obj); 
@@ -91,11 +91,12 @@ label_library = [basic_set;extended_set];
 
 %% move tray using UR5
 tic;
-URcontrol.moveLinear(robotControl,'joint',PosePreTray);
-pause(2);
 URcontrol.gripperAction(robotControl,'open');
 pause(2);
-%input('Make sure the tray is in the region and press enter')
+URcontrol.moveLinear(robotControl,'joint',PosePreTray);
+pause(2);
+
+input('Make sure the tray is in the region and press enter')
 
 URcontrol.moveLinear(robotControl,'joint',PoseTrayLoad);
 pause(2);
@@ -176,7 +177,7 @@ parameters_of_set = parameters_of_set_id(lego_set_id);
 Igray=rgb2gray(I);
 
 % identify Blobs
-;
+
 % get binary image
 binaryImage=histogram_binarymap(I, thresholdHist,minimumSize,maximumSize,1);
 
