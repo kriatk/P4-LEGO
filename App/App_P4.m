@@ -22,7 +22,7 @@ function varargout = App_P4(varargin)
 
 % Edit the above text to modify the response to help App_P4
 
-% Last Modified by GUIDE v2.5 18-May-2018 20:05:55
+% Last Modified by GUIDE v2.5 19-May-2018 21:26:34
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -55,15 +55,15 @@ function App_P4_OpeningFcn(hObject, eventdata, handles, varargin)
 % Choose default command line output for App_P4
 handles.output = hObject;
 
-% axes(handles.axes3);
-% vid = videoinput('winvideo', 1);
-% hImage = image(zeros(200,100,3),'Parent',handles.axes3);
-% preview(vid,hImage);
+axes(handles.left_axes);
+handles.vid = videoinput('winvideo', 1,'MJPG_1280x720');
+handles.hImage = image(zeros(200,100,3),'Parent',handles.left_axes);
+preview(handles.vid,handles.hImage);
 
-axes(handles.axes4);
-vid = videoinput('winvideo', 1);
-hImage = image(zeros(200,100,3),'Parent',handles.axes4);
-preview(vid,hImage);
+axes(handles.right_axes);
+handles.vid = videoinput('winvideo', 2,'RGB24_320x240');
+handles.hImage = image(zeros(200,200,3),'Parent',handles.right_axes);
+preview(handles.vid,handles.hImage);
 
 % Update handles structure
 guidata(hObject, handles);
@@ -80,6 +80,7 @@ function varargout = App_P4_OutputFcn(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Get default command line output from handles structure
+
 varargout{1} = handles.output;
 
 
@@ -88,4 +89,38 @@ function pushbutton1_Callback(hObject, eventdata, handles)
 % hObject    handle to pushbutton1 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-run('Camera_Show.m');
+prompt = {'Are all bricks on the tray and is the tray in the right place? Enter "y" to run code and "n" to exit'};
+title = 'Input';
+definput = {'n'};
+opts.Interpreter = 'tex';
+answer = inputdlg(prompt,title,[1 40],definput,opts);
+if cell2sym(answer) == 'y'
+    run('COMPLETE_CODE.m');
+    string1 = sprintf('System is running');
+    set(handles.edit1, 'String', string1);
+elseif cell2sym(answer) == 'n'
+    close all force;
+else
+    msgbox('You have to enter either "y" or "n"', 'Wrong Input','error');
+end
+
+function edit1_Callback(hObject, eventdata, handles)
+% hObject    handle to edit1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of edit1 as text
+%        str2double(get(hObject,'String')) returns contents of edit1 as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function edit1_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to edit1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
