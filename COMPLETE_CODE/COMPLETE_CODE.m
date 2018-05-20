@@ -209,7 +209,7 @@ predictor = trainedClassifier.predictFcn(stats);
 %[predictor,NegLoss,PBScore,Posterior] = predict(mdl, stats);
 
 %% show outlines of blobs (new method with labels)
-;
+
 %now with classification and named labels
 for i=1:length(blobMeasurements);
 pos(i,:) = blobMeasurements(i).BoundingBox;
@@ -236,7 +236,7 @@ status_of_set = update_status(label_library,predictor,lego_box_id,parameters_of_
 stats_labels=[label_library';status_of_set]
 
 
-;
+
 predictor = sort(predictor);
 
 % save box status with Scancode in Database
@@ -249,7 +249,12 @@ pause(2);
 URcontrol.moveLinear(robotControl,'joint',PoseMid2);
 pause(2);
 
+disp('')
+disp('')
+disp('')
+
 if sum(status_of_set)~=0 %if it's a bad set moves to the problem corner
+    disp('THE SET IS NOT COMPLETE')
    URcontrol.moveLinear(robotControl,'joint',PosePreSet1);
    pause(2);
    URcontrol.moveLinear(robotControl,'joint',PoseProblem);
@@ -259,6 +264,7 @@ if sum(status_of_set)~=0 %if it's a bad set moves to the problem corner
    URcontrol.moveLinear(robotControl,'joint',PosePreSet1);
    pause(2);
 else
+    disp('THE SET IS COMPLETE')
    URcontrol.moveLinear(robotControl,'joint',PosePreComplete);
    pause(2);
    URcontrol.moveLinear(robotControl,'joint',PoseComplete);

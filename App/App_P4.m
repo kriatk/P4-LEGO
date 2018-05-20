@@ -56,13 +56,13 @@ function App_P4_OpeningFcn(hObject, eventdata, handles, varargin)
 handles.output = hObject;
 
 axes(handles.left_axes);
-handles.vid = videoinput('winvideo', 1,'MJPG_1280x720');
-handles.hImage = image(zeros(200,100,3),'Parent',handles.left_axes);
+handles.vid = videoinput('winvideo', 2,'RGB24_320x240');
+handles.hImage = image(zeros(240,320,3),'Parent',handles.left_axes);
 preview(handles.vid,handles.hImage);
 
 axes(handles.right_axes);
-handles.vid = videoinput('winvideo', 2,'RGB24_320x240');
-handles.hImage = image(zeros(200,200,3),'Parent',handles.right_axes);
+handles.vid = videoinput('winvideo', 3, 'MJPG_640x480'); 
+handles.hImage = image(zeros(480,640,3),'Parent',handles.right_axes);
 preview(handles.vid,handles.hImage);
 
 % Update handles structure
@@ -95,7 +95,7 @@ definput = {'n'};
 opts.Interpreter = 'tex';
 answer = inputdlg(prompt,title,[1 40],definput,opts);
 if cell2sym(answer) == 'y'
-    run('COMPLETE_CODE.m');
+    run('C:\Users\Stefan_Na\OneDrive\MOE\P4\P4-LEGO\COMPLETE_CODE\COMPLETE_CODE.m');
     string1 = sprintf('System is running');
     set(handles.edit1, 'String', string1);
 elseif cell2sym(answer) == 'n'
