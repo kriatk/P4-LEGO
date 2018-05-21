@@ -1,11 +1,11 @@
 %% This is a script to detect one blob on a black surface
 clear all; close all; clc;
 % addpath('./functions/');
-myFolder = 'C:\Users\Stefan_Na\OneDrive\MOE\P4\P4-LEGO\Expeiments for Blob and Color\close bricks_10'; % Define your working folder
+myFolder = 'C:\Users\Stefan_Na\OneDrive\MOE\P4\P4-LEGO\Expeiments for Blob and Color\BLOB\NEW_DARKNESS'; % Define your working folder
 
-maximumSize= 15000; % 
-minimumSize= 500; % 
-thresholdHist = 36 %for Red
+maximumSize= 20000; % 
+minimumSize= 400; % 
+thresholdHist = 53%for Red
 
 % maximumSize= 5000; % for Red
 % minimumSize= 1000; % for Red
@@ -35,27 +35,32 @@ for k = 1:length(pictures)
   FileNames=[FileNames;fullfile(myFolder, baseFileName)];
   picturesfull = [picturesfull;fullfile(myFolder, baseFileName)];
 
-  I= imread(char(fullFileName));
+%   I= imread(char(fullFileName));
+  I= imread('C:\Users\Stefan_Na\OneDrive\MOE\P4\P4-LEGO\Expeiments for Blob and Color\BLOB\NEW_DARKNESS\darkness.jpg');
+%   I=I(100:350,50:450,:);
   Igray=rgb2gray(I);
   Number_of_blobs=0;
-%   thresholdHist = 33;
+% thresholdHist = 40;
  
-% while Number_of_blobs <9
-  [binaryImage, Number_of_blobs]=histogram_binarymap(I, thresholdHist,minimumSize,maximumSize,0);
-%   thresholdHist=thresholdHist+1
+% while Number_of_blobs <6
+figure;
+  [binaryImage, Number_of_blobs]=histogram_binarymap(I, thresholdHist,minimumSize,maximumSize,1);
+%    thresholdHist=thresholdHist+1
   Number_of_blobs
-figure; imshow(binaryImage)
-%   if thresholdHist >40
+figure; imshow(I)
+%   if thresholdHist >55
 %       touching_blobs(k).file=baseFileName;
 %       touching_blobs(k).thresh=thresholdHist;
 %       touching_blobs(k).blobs=Number_of_blobs;
+%        touching_blobs(k).binary=binaryImage;
 %       break;
 %   else
       touching_blobs(k).file=baseFileName;
       touching_blobs(k).thresh=thresholdHist;
       touching_blobs(k).blobs=Number_of_blobs;
+      touching_blobs(k).binary=binaryImage;
 %   end
-%       
+      
 % end
 %   drawnow;
 %   pause(2);
@@ -70,6 +75,10 @@ numberOfBlobs = size(blobMeasurements, 1);
 %   Pixelcolors = find(binaryImage);
 	
 end
+
+backgroundR=regionprops(not(binaryImage), I(:,:,1), 'PixelValues')
+backgroundG=regionprops(not(binaryImage), I(:,:,2), 'PixelValues')
+backgroundB=regionprops(not(binaryImage), I(:,:,3), 'PixelValues')
 
 %% drop too samll blobs and adjust binary
 
