@@ -1,8 +1,9 @@
 %% This is a script to detect one blob on a black surface
-% clear all; close all; clc;
-
-myFolder = 'C:\Users\Stefan_Na\OneDrive\MOE\P4\TRAIN\20'; % Define your working folder
-lab=20
+clear all; close all; clc;
+blobMeasurements=struct([]);
+for lab=1:20
+myFolder = 'C:\Users\Stefan_Na\OneDrive\MOE\P4\TRAIN_TOP\'; % Define your working folder
+myFolder =[myFolder,char(string(lab))]
 maximumSize= 15000; % 
 minimumSize= 500; % 
 thresholdHist = 50; %keep at 50 for all features to have the same precondition
@@ -11,7 +12,7 @@ filePattern = fullfile(myFolder, '*.jpg');
 pictures = dir(filePattern);
 picturesfull= {};
 
-% blobMeasurements=struct([]);
+
 allcolor=struct([]);
 FileNames={};
 figure;
@@ -47,5 +48,5 @@ end
 numberOfBlobs = size(blobMeasurements, 1);
   
 end
-
+end
 
