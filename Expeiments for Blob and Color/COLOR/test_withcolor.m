@@ -12,18 +12,21 @@ extended_set = ["beige_4x2";"beige_8x1";"orange_4x2";"orange_round";"Prop";"red_
 label_library = [basic_set;extended_set];
 
 %% set classifier
+% load('trainedModelKNN');
+load('Feature_space_hue.mat')
 
 %[trainedClassifier, validationAccuracy] = trainClassifier(feature_space) 
-% [trainedClassifier, validationAccuracy] = trainClassifier_svm_fg(feature_space)
-
-
+%[trainedClassifier, validationAccuracy] = trainClassifier_svm_fg(feature_space)
+t = templateSVM('Standardize',1,'KernelFunction','gaussian','KernelScale',0.79);
+% 
+mdl=fitcecoc(feature_space,'Label','Learners',t,'FitPosterior',1);
 %% get blobs
 
 I=imread('C:\Users\Stefan_Na\OneDrive\MOE\P4\P4-LEGO\Expeiments for Blob and Color\COLOR\Same_Brick_different_color\2.jpg');
 Igray=rgb2gray(I);
 
 % get binary image
-binaryImage=histogram_binarymap(I, thresholdHist,minimumSize,maximumSize,1);
+binaryImage=histogram_binarymap(I, thresholdHist,minimumSize,maximumSize,0);
 [labeledImage,numObjects] = bwlabel(binaryImage, 8);
 blobMeasurements= regionprops(labeledImage, Igray, 'all');
 
@@ -41,11 +44,12 @@ color=regionprops(labeledImage, hue, 'PixelValues');
 stats = struct2table(stats);
 
 %% classify    
-predictor = trainedClassifier.predictFcn(stats);
-%[predictor,NegLoss,PBScore,Posterior] = predict(mdl, stats);
-
+% predictor = trainedModelKNN.predictFcn(stats);
+[predictor,NegLoss,PBScore,Posterior] = predict(mdl, stats);
+% [label,score,cost] = predict(mdl,stats)
+% predictor=label
 %% show outlines of blobs (new method with labels)
-;
+
 %now with classification and named labels
 for i=1:length(blobMeasurements);
 pos(i,:) = blobMeasurements(i).BoundingBox;
