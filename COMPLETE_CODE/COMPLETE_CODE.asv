@@ -163,9 +163,9 @@ parameters_of_set = parameters_of_set_id(lego_set_id);
 
 
 %% Take picture
-I = getsnapshot(obj);sound(100);
- %I=imread('C:\Users\Stefan_Na\OneDrive\MOE\P4\Pictures\Set_10_bricks\2.jpg');
- %I=imread('D:\Google Drev\AAU\4 semester\P4\Pictures\Training pictures\Testing_Sets\20_brick_tops\10.jpg');
+ I = getsnapshot(obj);sound(100);
+% I=imread('C:\Users\Stefan_Na\OneDrive\MOE\P4\Pictures\Set_10_bricks\2.jpg');
+% I=imread('D:\Google Drev\AAU\4 semester\P4\Pictures\Training pictures\Testing_Sets\20_brick_tops\10.jpg');
 Igray=rgb2gray(I);
 
 % identify Blobs
@@ -189,7 +189,7 @@ numberOfBlobs = size(blobMeasurements, 1);
 %     blobMeasurements(i).colorLabel=colornames('MATLAB',blobMeasurements(i).color/255);
 % end
 
-%% run classifier and predict label
+%% run classifier over blobs and asslabel
 
 stats = regionprops(binaryImage, Igray, 'Area', 'MajorAxisLength', 'MinorAxisLength', 'ConvexArea', 'Eccentricity', 'EquivDiameter', 'Perimeter', 'Solidity', 'MeanIntensity'); %for specific measurments
 stats = struct2table(stats);
